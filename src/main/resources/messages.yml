@@ -1,0 +1,43 @@
+prefix: "<dark_aqua>[<aqua>SMPX<dark_aqua>] <white>"
+messages:
+  # generic messages
+  no-permission: "<red>You don't have permission to do that! :c"
+  generic-error: "<red>An error has occurred. Please report this to an administrator."
+  player-not-found: "<red>Player not found: %player%"
+  invalid-arguments-count: "<red>Invalid number of arguments."
+  invalid-player-argument: "<red>You must specify a player."
+  invalid-sender: "<red>You must be a valid player."
+
+  # economy messages
+  balance: "Balance: $%balance%"
+  cant-afford: "You can't afford that transaction."
+  addbalance-sender: "Set %receiver%'s balance to $%balance%"
+  addbalance-receiver: "Your balance was set to $%balance% by %sender%"
+  removebalance-sender: "Set %receiver%'s balance to $%balance%"
+  removebalance-receiver: "Your balance was set to $%balance% by %sender%"
+  setbalance-sender: "Set %receiver%'s balance to $%balance%"
+  setbalance-receiver: "Your balance was set to $%balance% by %sender%"
+  pay-sender: "You have sent $%amount% to %receiver%"
+  pay-receiver: "You have received $%amount% from %sender%"
+
+  # admin messages
+  kick: "Kicked %target%. Reason: %reason%"
+  ban-perm: "Banned %target% permanently. Reason: %reason%"
+  ban-temp: "Banned %target% for %duration% minutes. Reason: %reason%"
+  no-reason-provided: "No reason provided"
+
+  # dev messages
+  reload-success: "Reloaded configs successfully."
+  reload-fail: "Failed to reloaded configs."
+  replace-success: "Replaced config files successfully."
+  replace-fail: "Failed to replace configs files."
+  save-success: "Saved users in cache successfully."
+  save-fail: "Failed to save users in cache."
+
+  help-title-default: "<dark_aqua>-------- <aqua>Commands Guide <dark_aqua>--------"
+  help-title-topic: "<dark_aqua>-------- <aqua>Commands Guide: %topic% <dark_aqua>--------"
+  help-tip: "<gray>Use /help <topic> or click the topic to get topic's details."
+  help-list-default: "<dark_gray>- <light_purple><bold><click:suggest_command:'/help %topic%'>%topic%</click>"
+  help-list-command: "<dark_gray>- <light_purple><bold><click:suggest_command:'/help %command%'>%command%</click></bold> <dark_gray>- <gray>%description%"
+  help-command-description: "<light_purple><bold>Description</bold></light_purple><gray>: %description%"
+  help-command-usage: "<light_purple><bold>Usage</bold></light_purple><gray>: %usage%"

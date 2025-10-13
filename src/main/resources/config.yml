@@ -1,0 +1,14 @@
+economy:
+  initial-balance: 1000
+  max-balance: 1000000
+storage:
+  type: "mysql" # mysql (relational database) | yaml (file-based database)
+  yaml:
+    path: "userdata"
+    filename: "<UUID>.yml"
+  mysql:
+    host: "localhost"
+    port: "3306"
+    database: "smpx"
+    user: "root"
+    password: ""
