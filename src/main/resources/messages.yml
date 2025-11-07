@@ -27,10 +27,15 @@ messages:
   no-reason-provided: "No reason provided"
 
   # dev messages
-  reload-success: "Reloaded configs successfully."
-  reload-fail: "Failed to reloaded configs."
-  replace-success: "Replaced config files successfully."
-  replace-fail: "Failed to replace configs files."
+  reload-all-success: "Reloaded everything successfully."
+  reload-success: "Reloaded %module% successfully."
+  reload-fail: "Failed to reloaded %module%."
+
+  replace-all-success: "Replaced all files successfully."
+  replace-success: "Replaced %module% files successfully."
+  replace-fail: "Failed to replace %module% files."
+
+  invalid-module: "Invalid module provided."
   save-success: "Saved users in cache successfully."
   save-fail: "Failed to save users in cache."
 

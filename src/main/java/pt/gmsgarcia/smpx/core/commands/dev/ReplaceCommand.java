@@ -6,6 +6,10 @@ import org.jetbrains.annotations.NotNull;
 import pt.gmsgarcia.smpx.core.SmpxCore;
 import pt.gmsgarcia.smpx.core.commands.SmpxCommand;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 public class ReplaceCommand extends SmpxCommand {
     public static final String NAME = "replace";
     public static final String DESCRIPTION = "Replace configurations";
@@ -20,8 +24,48 @@ public class ReplaceCommand extends SmpxCommand {
         CommandSender sender = source.getSender();
 
         if (sender.hasPermission(PERMISSION)) {
-            SmpxCore.replace();
-            sender.sendMessage(SmpxCore.messages().component("replace-success", true));
+            String module = "all";
+
+            if (args.length != 0) {
+                module = args[0];
+            }
+
+            switch (module) {
+                case "all" -> {
+                    SmpxCore.config().replace();
+                    SmpxCore.messages().replace();
+                }
+                case "config" -> SmpxCore.config().replace();
+                case "messages" -> SmpxCore.messages().replace();
+                default -> {
+                    sender.sendMessage(SmpxCore.messages().component("invalid-module", true));
+                    return;
+                }
+            }
+
+            if (module.equals("all")) {
+                sender.sendMessage(SmpxCore.messages().component("replace-all-success", true ));
+            } else {
+                sender.sendMessage(SmpxCore.messages().component("replace-success", true, "module", module));
+            }
         }
+    }
+
+    @Override
+    public @NotNull Collection<String> suggest(@NotNull CommandSourceStack source, String @NotNull [] args) {
+        CommandSender sender = source.getSender();
+        List<String> modules = List.of("all", "config", "messages");
+
+        if (sender.hasPermission(PERMISSION)) {
+            if (args.length == 0) {
+                return modules;
+            }
+
+            if (args.length == 1) {
+                return modules.stream().filter(name -> name.toLowerCase().startsWith(args[args.length - 1].toLowerCase())).toList();
+            }
+        }
+
+        return new ArrayList<>();
     }
 }

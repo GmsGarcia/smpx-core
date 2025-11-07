@@ -46,16 +46,6 @@ public final class SmpxCore extends JavaPlugin {
         users().saveAll();
     }
 
-    public static void reload() {
-        messages.load();
-        logger.info("SmpxCore reloaded");
-    }
-
-    public static void replace() {
-        messages.replace();
-        logger.info("SmpxCore files replaced");
-    }
-
     // getters...
     public static SmpxCore instance() {
         return getPlugin(SmpxCore.class);

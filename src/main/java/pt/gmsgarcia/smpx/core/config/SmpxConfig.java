@@ -38,6 +38,11 @@ public class SmpxConfig {
         this.storage = new StorageConfig(config);
     }
 
+    public void replace() {
+        SmpxCore.instance().saveResource("config.yml", true);
+        this.load();
+    }
+
     public void save() {
         try {
             config.save(file);
