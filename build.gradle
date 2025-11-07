@@ -4,9 +4,6 @@ plugins {
     id 'io.github.goooler.shadow' version '8.1.8'
 }
 
-group = 'pt.gmsgarcia'
-version = '0.0.1-PRE-ALPHA'
-
 repositories {
     mavenCentral()
     maven {
@@ -57,7 +54,7 @@ tasks.withType(JavaCompile).configureEach {
 }
 
 processResources {
-    def props = [name: name, version: version]
+    def props = [name: project.name, version: project.version]
     inputs.properties props
     filteringCharset 'UTF-8'
     filesMatching('plugin.yml') {
