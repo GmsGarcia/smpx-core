@@ -10,10 +10,7 @@ import pt.gmsgarcia.smpx.core.user.UserName;
 
 import java.math.BigDecimal;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 public class MySQLStorage implements IStorageLayer {
 
@@ -34,48 +31,105 @@ public class MySQLStorage implements IStorageLayer {
 
         try (Connection conn = dataSource.getConnection()) {
             SmpxCore.logger().info("Successfully connected to MySQL database.");
+            verifyDatabaseIntegrity(conn);
         } catch (Exception e) {
-            SmpxCore.logger().warning("Failed to connect to MySQL database.");
+            SmpxCore.logger().severe("Failed to connect to MySQL database.");
         }
-
-        verifyTableIntegrity();
     }
 
-    private void verifyTableIntegrity() {
-        String tableName = "users";
-        Set<String> requiredColumns = Set.of("uuid", "name", "balance");
+    private void verifyDatabaseIntegrity(Connection conn) {
+        LinkedHashMap<String, Set<String>> tables = new LinkedHashMap<>();
+        tables.put("users", Set.of("uuid", "name", "balance", "join_date", "last_seen"));
+        tables.put("previous_usernames", Set.of("uuid", "name", "last_usage"));
 
-        try (Connection connection = dataSource.getConnection()) {
-            DatabaseMetaData meta = connection.getMetaData();
+        try {
+            DatabaseMetaData meta = conn.getMetaData();
 
-            // Check if table exists
-            try (ResultSet tables = meta.getTables(null, null, tableName, null)) {
-                if (!tables.next()) {
-                    SmpxCore.logger().severe("Table 'users' not found. Creating it (Not implemented)...");
-                    //createUsersTable();
-                    return;
+            for (Map.Entry<String, Set<String>> table : tables.entrySet()) {
+                try (ResultSet rs = meta.getTables(conn.getCatalog(), null, table.getKey(), null)) {
+                    if (!rs.next()) {
+                        SmpxCore.logger().warning("Table '" + table.getKey() + "' not found. Creating it...");
+                        createTable(conn, table.getKey());
+                        continue;
+                    }
                 }
-            }
 
-            // Check columns
-            Set<String> existingColumns = new HashSet<>();
-            try (ResultSet columns = meta.getColumns(null, null, tableName, null)) {
-                while (columns.next()) {
-                    existingColumns.add(columns.getString("COLUMN_NAME").toLowerCase());
+                Set<String> columns = new HashSet<>();
+                try (ResultSet rs = meta.getColumns(conn.getCatalog(), null, table.getKey(), null)) {
+                    while (rs.next()) {
+                        columns.add(rs.getString("COLUMN_NAME").toLowerCase());
+                    }
                 }
-            }
 
-            for (String col : requiredColumns) {
-                if (!existingColumns.contains(col.toLowerCase())) {
-                    SmpxCore.logger().severe("Column '" + col + "' missing. Adding it (Not implemented)...");
-                    //addMissingColumn(connection, tableName, col);
+                for (String column : table.getValue()) {
+                    if (!columns.contains(column.toLowerCase())) {
+                        SmpxCore.logger().warning("Column '" + column + "' missing. Adding it...");
+                        addMissingColumn(conn, table.getKey(), column);
+                    }
                 }
-            }
 
-            SmpxCore.logger().info("Database table '" + tableName + "' integrity verified.");
+                SmpxCore.logger().info("Database table '" + table.getKey() + "' integrity verified.");
+            }
         } catch (SQLException e) {
             SmpxCore.logger().severe("Failed to verify database integrity: " + e.getMessage());
         }
+    }
+
+    private void createTable(Connection conn, String table) {
+        String sql;
+
+        switch (table.toLowerCase()) {
+            case "users" -> sql = """
+                CREATE TABLE IF NOT EXISTS users (
+                    uuid CHAR(36) PRIMARY KEY UNIQUE,
+                    name VARCHAR(16) NOT NULL,
+                    balance DECIMAL(18,2) NOT NULL DEFAULT 0,
+                    join_date BIGINT NOT NULL,
+                    last_seen BIGINT DEFAULT NULL
+                )
+            """;
+            case "previous_usernames" -> sql = """
+                CREATE TABLE IF NOT EXISTS previous_usernames (
+                    uuid CHAR(36) NOT NULL,
+                    name VARCHAR(16) NOT NULL,
+                    last_usage BIGINT NOT NULL,
+                    INDEX(uuid),
+                    CONSTRAINT fk_prev_user_uuid FOREIGN KEY (uuid) REFERENCES users(uuid) ON DELETE CASCADE
+                )
+            """;
+            default -> {
+                SmpxCore.logger().warning("No create definition for table: " + table);
+                return;
+            }
+        }
+
+        try (Statement stmt = conn.createStatement()) {
+            stmt.executeUpdate(sql);
+            SmpxCore.logger().info("Created table '" + table + "'.");
+        } catch (SQLException e) {
+            SmpxCore.logger().severe("Failed to create table '" + table + "': " + e.getMessage());
+        }
+    }
+
+    private void addMissingColumn(Connection conn, String table, String column) {
+        String sql = "ALTER TABLE `" + table + "` ADD COLUMN `" + column + "` " + getDefinition(column.toLowerCase());
+
+        try (Statement stmt = conn.createStatement()) {
+            stmt.executeUpdate(sql);
+            SmpxCore.logger().info("Added missing column '" + column + "' to table '" + table + "'.");
+        } catch (SQLException e) {
+            SmpxCore.logger().severe("Failed to add column '" + column + "' to table '" + table + "': " + e.getMessage());
+        }
+    }
+
+    private String getDefinition(String column) {
+        return switch (column.toLowerCase()) {
+            case "uuid" -> "CHAR(36) NOT NULL";
+            case "name" -> "VARCHAR(64) NOT NULL";
+            case "balance" -> "DECIMAL(18,2) NOT NULL DEFAULT 0";
+            case "join_date", "last_seen", "last_usage" -> "BIGINT NOT NULL DEFAULT 0";
+            default -> "VARCHAR(255)";
+        };
     }
 
     @Override
@@ -97,7 +151,7 @@ public class MySQLStorage implements IStorageLayer {
                     return new User(uuid, name, balance, joinDate, lastSeen, previousNames);
                 }
 
-                SmpxCore.logger().warning("No user found with UUID " + uuid + " in database.");
+                SmpxCore.logger().info("No user found with UUID " + uuid + " in database.");
                 return null;
             }
         } catch (SQLException e) {
@@ -129,7 +183,7 @@ public class MySQLStorage implements IStorageLayer {
                 }
 
                 if (names.isEmpty()) {
-                    SmpxCore.logger().warning("Users with uuid " + uuid + " has no previous usernames in database.");
+                    SmpxCore.logger().info("Users with uuid " + uuid + " has no previous usernames in database.");
                     return null;
                 }
 
