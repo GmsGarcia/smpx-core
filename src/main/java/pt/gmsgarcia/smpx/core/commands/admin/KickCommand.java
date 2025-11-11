@@ -1,7 +1,5 @@
 package pt.gmsgarcia.smpx.core.commands.admin;
 
-import com.destroystokyo.paper.profile.PlayerProfile;
-import io.papermc.paper.ban.BanListType;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
@@ -15,7 +13,6 @@ import pt.gmsgarcia.smpx.core.user.User;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 public class KickCommand extends SmpxCommand {

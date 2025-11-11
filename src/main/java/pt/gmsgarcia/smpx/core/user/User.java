@@ -5,7 +5,6 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 import java.math.BigDecimal;
-import java.net.Inet4Address;
 import java.util.ArrayList;
 import java.util.UUID;
 

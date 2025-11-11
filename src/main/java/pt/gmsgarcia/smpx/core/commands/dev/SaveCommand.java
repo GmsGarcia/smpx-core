@@ -6,8 +6,6 @@ import org.jetbrains.annotations.NotNull;
 import pt.gmsgarcia.smpx.core.SmpxCore;
 import pt.gmsgarcia.smpx.core.commands.SmpxCommand;
 
-import java.util.Collection;
-
 public class SaveCommand extends SmpxCommand {
     public static final String NAME = "save";
     public static final String DESCRIPTION = "Save users in cache to database";

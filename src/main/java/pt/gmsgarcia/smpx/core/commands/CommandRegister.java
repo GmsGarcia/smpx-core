@@ -7,9 +7,9 @@ import pt.gmsgarcia.smpx.core.commands.admin.BanIpCommand;
 import pt.gmsgarcia.smpx.core.commands.admin.KickCommand;
 import pt.gmsgarcia.smpx.core.commands.dev.ReloadCommand;
 import pt.gmsgarcia.smpx.core.commands.dev.ReplaceCommand;
+import pt.gmsgarcia.smpx.core.commands.dev.SaveCommand;
 import pt.gmsgarcia.smpx.core.commands.economy.*;
 import pt.gmsgarcia.smpx.core.commands.tools.HelpCommand;
-import pt.gmsgarcia.smpx.core.commands.dev.SaveCommand;
 import pt.gmsgarcia.smpx.core.commands.tools.WhoIsCommand;
 
 import java.util.List;

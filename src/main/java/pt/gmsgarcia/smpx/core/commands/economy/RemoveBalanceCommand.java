@@ -13,7 +13,6 @@ import pt.gmsgarcia.smpx.core.user.User;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.concurrent.CompletableFuture;
 
 public class RemoveBalanceCommand extends SmpxCommand {
     public static final String NAME = "removebalance";
