@@ -1,11 +1,6 @@
 package pt.gmsgarcia.smpx.core.commands.economy;
 
-import com.mojang.brigadier.arguments.DoubleArgumentType;
-import com.mojang.brigadier.arguments.StringArgumentType;
-import com.mojang.brigadier.tree.LiteralCommandNode;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
-import io.papermc.paper.command.brigadier.Commands;
-import it.unimi.dsi.fastutil.Hash;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
@@ -14,14 +9,9 @@ import org.jetbrains.annotations.NotNull;
 import pt.gmsgarcia.smpx.core.SmpxCore;
 import pt.gmsgarcia.smpx.core.commands.SmpxCommand;
 import pt.gmsgarcia.smpx.core.user.User;
-import pt.gmsgarcia.smpx.core.user.UserMapCallback;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
 
 public class PayCommand extends SmpxCommand {
     public static final String NAME = "pay";
@@ -59,7 +49,6 @@ public class PayCommand extends SmpxCommand {
                 return;
             }
 
-            // TODO: create wrapper for this offlineplayer obj and then get it with user.base()
             OfflinePlayer receiverOfflinePlayer = Bukkit.getOfflinePlayer(receiverName);
             if (!receiverOfflinePlayer.hasPlayedBefore() && !receiverOfflinePlayer.isOnline()) {
                 sender.sendMessage(SmpxCore.messages().component("player-not-found", true, "player", receiverName));
@@ -69,45 +58,33 @@ public class PayCommand extends SmpxCommand {
             UUID senderUUID = ((Player) sender).getPlayer().getUniqueId();
             UUID receiverUUID = receiverOfflinePlayer.getUniqueId();
 
-            CompletableFuture<HashMap<UUID, User>> future = getUsers(new ArrayList<>(List.of(senderUUID, receiverUUID)));
-            future.thenAccept((users) -> {
-                if (users == null) {
-                    sender.sendMessage(SmpxCore.messages().component("generic-error", true));
-                    return;
+            User senderUser = getUser(senderUUID);
+            if (senderUser == null) {
+                sender.sendMessage(SmpxCore.messages().component("generic-error", true));
+                return;
+            }
+
+            User receiverUser = getUser(receiverUUID);
+            if (receiverUser == null) {
+                sender.sendMessage(SmpxCore.messages().component("generic-error", true));
+                return;
+            }
+
+            if (!senderUser.canAfford(amount)) {
+                sender.sendMessage(SmpxCore.messages().component("cant-afford", true));
+                return;
+            }
+
+            senderUser.pay(receiverUser, amount);
+
+            sender.sendMessage(SmpxCore.messages().component("pay-sender", true, "amount", amount.toString(), "receiver", receiverUser.name()));
+
+            if (receiverOfflinePlayer.isOnline()) {
+                Player receiverPlayer = receiverOfflinePlayer.getPlayer();
+                if (receiverPlayer != null) {
+                    sender.sendMessage(SmpxCore.messages().component("pay-receiver", true, "amount", amount.toString(), "sender", senderUser.name()));
                 }
-
-                User senderUser = users.get(senderUUID);
-                User receiverUser = users.get(receiverUUID);
-
-                if (senderUser == null) {
-                    sender.sendMessage(SmpxCore.messages().component("generic-error", true));
-                    return;
-                }
-
-                if (receiverUser == null) {
-                    sender.sendMessage(SmpxCore.messages().component("generic-error", true));
-                    return;
-                }
-
-                if (!senderUser.canAfford(amount)) {
-                    sender.sendMessage(SmpxCore.messages().component("cant-afford", true));
-                    return;
-                }
-
-                senderUser.pay(receiverUser, amount);
-
-                SmpxCore.runTask(() -> {
-                    sender.sendMessage(SmpxCore.messages().component("pay-sender", true, "amount", amount.toString(), "receiver", receiverUser.name()));
-
-                    if (receiverOfflinePlayer.isOnline()) {
-                        // TODO: create wrapper for this offlineplayer obj and then get it with user.base()
-                        Player receiverPlayer = receiverOfflinePlayer.getPlayer();
-                        if (receiverPlayer != null) {
-                            sender.sendMessage(SmpxCore.messages().component("pay-receiver", true, "amount", amount.toString(), "sender", senderUser.name()));
-                        }
-                    }
-                });
-            });
+            }
         }
     }
 }

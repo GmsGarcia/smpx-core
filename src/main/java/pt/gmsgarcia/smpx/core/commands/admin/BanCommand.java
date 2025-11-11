@@ -39,42 +39,40 @@ public class BanCommand extends SmpxCommand {
                 return;
             }
 
-            CompletableFuture<User> future = getUser(args[0]);
-            future.thenAccept((target) -> {
-                if (target == null) {
-                    sender.sendMessage(SmpxCore.messages().component("generic-error", true));
-                    return;
-                }
+            User target = getUser(args[0]);
+            if (target == null) {
+                sender.sendMessage(SmpxCore.messages().component("generic-error", true));
+                return;
+            }
 
-                int duration = 0;
-                if (args.length >= 2) {
-                    duration = Integer.parseInt(args[1]);
-                }
+            int duration = 0;
+            if (args.length >= 2) {
+                duration = Integer.parseInt(args[1]);
+            }
 
-                String reason = SmpxCore.messages().get("no-reason-provided");
-                if (args.length >= 2) {
-                    reason = Arrays.stream(args, 1, args.length)
-                            .collect(Collectors.joining(" "));
-                }
+            String reason = SmpxCore.messages().get("no-reason-provided");
+            if (args.length >= 2) {
+                reason = Arrays.stream(args, 1, args.length)
+                        .collect(Collectors.joining(" "));
+            }
 
-                if (target.player().isOnline()) {
-                    target.player().kick(Component.text(reason));
-                }
+            if (target.player().isOnline()) {
+                target.player().kick(Component.text(reason));
+            }
 
-                Date expireDate = null;
-                if (duration > 0) {
-                    expireDate = new Date(System.currentTimeMillis() + (duration * 60L * 60L * 1000L));
-                }
+            Date expireDate = null;
+            if (duration > 0) {
+                expireDate = new Date(System.currentTimeMillis() + (duration * 60L * 60L * 1000L));
+            }
 
-                PlayerProfile profile = target.player().getPlayerProfile();
-                SmpxCore.instance().getServer().getBanList(BanListType.PROFILE).addBan(profile, reason, expireDate, sender.getName());
+            PlayerProfile profile = target.player().getPlayerProfile();
+            SmpxCore.instance().getServer().getBanList(BanListType.PROFILE).addBan(profile, reason, expireDate, sender.getName());
 
-                if (expireDate == null) {
-                    sender.sendMessage(SmpxCore.messages().prefix() + SmpxCore.messages().component("ban-perm", true, "target", target.name(), "reason", reason));
-                } else {
-                    sender.sendMessage(SmpxCore.messages().component("ban-temp", true, "target", target.name(), "duration", Integer.toString(duration), "reason", reason));
-                }
-            });
+            if (expireDate == null) {
+                sender.sendMessage(SmpxCore.messages().prefix() + SmpxCore.messages().component("ban-perm", true, "target", target.name(), "reason", reason));
+            } else {
+                sender.sendMessage(SmpxCore.messages().component("ban-temp", true, "target", target.name(), "duration", Integer.toString(duration), "reason", reason));
+            }
         }
     }
 

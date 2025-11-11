@@ -22,10 +22,8 @@ public class SaveCommand extends SmpxCommand {
         CommandSender sender = source.getSender();
 
         if (sender.hasPermission(PERMISSION)) {
-            SmpxCore.runTaskAsync(() -> {
-                SmpxCore.users().saveAll();
-                sender.sendMessage(SmpxCore.messages().component("save-success", true));
-            });
+            SmpxCore.users().saveAll();
+            sender.sendMessage(SmpxCore.messages().component("save-success", true));
         }
     }
 }

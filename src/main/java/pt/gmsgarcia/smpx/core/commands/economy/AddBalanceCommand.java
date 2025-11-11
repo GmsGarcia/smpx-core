@@ -56,21 +56,19 @@ public class AddBalanceCommand extends SmpxCommand {
                 return;
             }
 
-            CompletableFuture<User> future = getUser(targetName);
-            future.thenAccept((target) -> {
-                if (target == null) {
-                    sender.sendMessage(SmpxCore.messages().component("generic-error", true));
-                    return;
-                }
+            User target = getUser(targetName);
+            if (target == null) {
+                sender.sendMessage(SmpxCore.messages().component("generic-error", true));
+                return;
+            }
 
-                target.addBalance(amount);
+            target.addBalance(amount);
 
-                sender.sendMessage(SmpxCore.messages().component("addbalance-sender", true, "receiver", target.name(), "balance", target.balance().toString()));
+            sender.sendMessage(SmpxCore.messages().component("addbalance-sender", true, "receiver", target.name(), "balance", target.balance().toString()));
 
-                if (target.player().isOnline()) {
-                    sender.sendMessage(SmpxCore.messages().component("addbalance-receiver", true, "balance", target.balance().toString(), "sender", sender.getName()));
-                }
-            });
+            if (target.player().isOnline()) {
+                sender.sendMessage(SmpxCore.messages().component("addbalance-receiver", true, "balance", target.balance().toString(), "sender", sender.getName()));
+            }
         }
     }
 

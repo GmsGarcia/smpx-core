@@ -1,10 +1,6 @@
 package pt.gmsgarcia.smpx.core.commands.economy;
 
-import com.mojang.brigadier.arguments.DoubleArgumentType;
-import com.mojang.brigadier.arguments.StringArgumentType;
-import com.mojang.brigadier.tree.LiteralCommandNode;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
-import io.papermc.paper.command.brigadier.Commands;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
@@ -13,15 +9,10 @@ import org.jetbrains.annotations.NotNull;
 import pt.gmsgarcia.smpx.core.SmpxCore;
 import pt.gmsgarcia.smpx.core.commands.SmpxCommand;
 import pt.gmsgarcia.smpx.core.user.User;
-import pt.gmsgarcia.smpx.core.user.UserMapCallback;
 
-import java.awt.image.SampleModel;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 
 public class SetBalanceCommand extends SmpxCommand {
     public static final String NAME = "setbalance";
@@ -64,21 +55,19 @@ public class SetBalanceCommand extends SmpxCommand {
                 return;
             }
 
-            CompletableFuture<User> future = getUser(targetName);
-            future.thenAccept((target) -> {
-                if (target == null) {
-                    sender.sendMessage(SmpxCore.messages().component("generic-error", true));
-                    return;
-                }
+            User target = getUser(targetName);
+            if (target == null) {
+                sender.sendMessage(SmpxCore.messages().component("generic-error", true));
+                return;
+            }
 
-                target.setBalance(amount);
+            target.setBalance(amount);
 
-                sender.sendMessage(SmpxCore.messages().component("setbalance-sender", true, "receiver", target.name(), "balance", target.balance().toString()));
+            sender.sendMessage(SmpxCore.messages().component("setbalance-sender", true, "receiver", target.name(), "balance", target.balance().toString()));
 
-                if (target.player().isOnline()) {
-                    sender.sendMessage(SmpxCore.messages().component("setbalance-receiver", true, "balance", target.balance().toString(), "sender", sender.getName()));
-                }
-            });
+            if (target.player().isOnline()) {
+                sender.sendMessage(SmpxCore.messages().component("setbalance-receiver", true, "balance", target.balance().toString(), "sender", sender.getName()));
+            }
         }
     }
 

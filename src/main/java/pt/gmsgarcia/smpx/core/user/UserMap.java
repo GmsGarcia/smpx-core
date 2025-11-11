@@ -4,6 +4,9 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.common.cache.RemovalListener;
+import it.unimi.dsi.fastutil.Hash;
+import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import pt.gmsgarcia.smpx.core.SmpxCore;
@@ -25,10 +28,8 @@ public class UserMap {
             .expireAfterAccess(10, TimeUnit.MINUTES) // keep offline users in memory for 10 mins after last use
             .removalListener((RemovalListener<UUID, User>) notification -> {
                 if (notification.getValue() != null) {
-                    SmpxCore.runTaskAsync(() -> {
-                        SmpxCore.storage().layer().save(notification.getValue());
-                        SmpxCore.logger().info("Saved & removed cached user: " + notification.getKey());
-                    });
+                    SmpxCore.storage().layer().save(notification.getValue());
+                    SmpxCore.logger().info("Saved & removed cached user: " + notification.getKey());
                 }
             })
             .build(new CacheLoader<>() {
@@ -53,25 +54,22 @@ public class UserMap {
             return;
         }
 
-        SmpxCore.runTaskAsync(() -> {
-            User user;
+        User user;
 
-            try {
-                user = cache.getUnchecked(uuid);
+        try {
+            user = cache.getUnchecked(uuid);
 
-                if (!user.name().equals(player.getName())) {
-                    SmpxCore.storage().layer().savePreviousName(user);
-                    user.updateName(player.getName());
-                    SmpxCore.storage().layer().save(user);
-                }
-            } catch (Exception e) {
-                user = new User(player.getUniqueId(), player.getName(), SmpxCore.config().economy().initialBalance(), System.currentTimeMillis());
-                SmpxCore.storage().layer().create(user);
+            if (!user.name().equals(player.getName())) {
+                SmpxCore.storage().layer().savePreviousName(user);
+                user.updateName(player.getName());
+                SmpxCore.storage().layer().save(user);
             }
+        } catch (Exception e) {
+            user = this.create(uuid);
+        }
 
-            online.put(uuid, user);
-            SmpxCore.logger().info("Loaded user into online map: " + player.getName());
-        });
+        online.put(uuid, user);
+        SmpxCore.logger().info("Loaded user into online map: " + player.getName());
     }
 
     /* online players unload */
@@ -82,58 +80,75 @@ public class UserMap {
             user.setLastSeen(System.currentTimeMillis());
             cache.put(uuid, user);
 
-            SmpxCore.runTaskAsync(() -> SmpxCore.storage().layer().save(user));
+            SmpxCore.storage().layer().save(user);
+
+            SmpxCore.logger().info("Unloaded user from online map: " + user.name());
         }
     }
 
-    public void get(UUID uuid, UserMapCallback cb) {
+    public User get(UUID uuid) {
         if (online.containsKey(uuid)) {
-            cb.onUserGet(this.online.get(uuid));
+            return this.online.get(uuid);
         }
 
-        SmpxCore.runTaskAsync(() -> {
-            User user;
+        User user;
 
-            try {
-                user = cache.getUnchecked(uuid);
-                SmpxCore.runTask(() -> cb.onUserGet(user));
-            } catch (Exception e) {
-                SmpxCore.runTask(() -> cb.onUserGet((User) null));
-            }
-        });
+        try {
+            user = cache.getUnchecked(uuid);
+            return user;
+        } catch (Exception e) {
+            return null;
+        }
     }
 
-    public void get(Collection<UUID> uuids, UserMapCallback cb) {
+    public HashMap<UUID, User> get(Collection<UUID> uuids) {
         HashMap<UUID, User> users = new HashMap<>();
 
-        SmpxCore.runTaskAsync(() -> {
-            for (UUID uuid : uuids) {
-                if (online.containsKey(uuid)) {
-                    users.put(uuid, this.online.get(uuid));
-                    continue;
-                }
-
-                try {
-                    users.put(uuid, cache.getUnchecked(uuid));
-                } catch (Exception e) {
-                    users.put(uuid, null);
-                }
+        for (UUID uuid : uuids) {
+            if (online.containsKey(uuid)) {
+                users.put(uuid, this.online.get(uuid));
+                continue;
             }
 
-            SmpxCore.runTask(() -> cb.onUsersGet(users));
-        });
+            try {
+                users.put(uuid, cache.getUnchecked(uuid));
+            } catch (Exception e) {
+                users.put(uuid, null);
+            }
+        }
+
+        return users;
+    }
+
+    public User create(UUID uuid) {
+        OfflinePlayer player = Bukkit.getOfflinePlayer(uuid);
+
+        User user = new User(uuid, player.getName(), SmpxCore.config().economy().initialBalance(), System.currentTimeMillis());
+        SmpxCore.storage().layer().create(user);
+
+        return user;
+    }
+
+    public boolean exists(UUID uuid) {
+        if (online.containsKey(uuid)) {
+            return true;
+        }
+
+        try {
+            cache.getUnchecked(uuid);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     /* force save */
     public void save(UUID uuid) {
-        this.get(uuid, new UserMapCallback() {
-            @Override
-            public void onUserGet(User user) {
-                if (user != null) {
-                    SmpxCore.runTaskAsync(() -> SmpxCore.storage().layer().save(user));
-                }
-            }
-        });
+        User user = this.get(uuid);
+
+        if (user != null) {
+            SmpxCore.storage().layer().save(user);
+        }
     }
 
     /* force save */
@@ -144,9 +159,5 @@ public class UserMap {
 
     public void invalidate(UUID uuid) {
         cache.invalidate(uuid);
-    }
-
-    public void breakpoint() {
-        SmpxCore.logger().info("breaking...");
     }
 }

@@ -2,7 +2,7 @@ economy:
   initial-balance: 1000
   max-balance: 1000000
 storage:
-  type: "mysql" # mysql (relational database) | yaml (file-based database)
+  type: "mysql" # mysql (relational database) | yaml (file-based database) - not implemented | h2 - not implemented
   yaml:
     path: "userdata"
     filename: "<UUID>.yml"

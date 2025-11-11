@@ -197,6 +197,7 @@ public class MySQLStorage implements IStorageLayer {
 
     @Override
     public void save(User user) {
+        // TODO: check if entry exists before updating it...
         String query = "UPDATE users SET name = ?, balance = ?, last_seen = ? WHERE uuid = ?";
         try (PreparedStatement stmt = this.dataSource.getConnection().prepareStatement(query)) {
             stmt.setString(1, user.name());
@@ -207,7 +208,7 @@ public class MySQLStorage implements IStorageLayer {
 
             SmpxCore.logger().info("Successfully updated user with UUID " + user.uuid().toString());
         } catch (SQLException e) {
-            // this is critical for now, since it only saves userdata when logging out!
+            // TODO: this is critical for now, since it only saves userdata when logging out!
             // i need to implement some periodic saves...
             SmpxCore.logger().severe("Failed to update user with UUID " + user.uuid().toString() + ": " + e.getMessage());
         }

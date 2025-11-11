@@ -37,25 +37,23 @@ public class KickCommand extends SmpxCommand {
                 return;
             }
 
-            CompletableFuture<User> future = getUser(args[0]);
-            future.thenAccept((target) -> {
-                if (target == null) {
-                    sender.sendMessage(SmpxCore.messages().component("generic-error", true));
-                    return;
-                }
+            User target = getUser(args[0]);
+            if (target == null) {
+                sender.sendMessage(SmpxCore.messages().component("generic-error", true));
+                return;
+            }
 
-                String reason = SmpxCore.messages().get("no-reason-provided");
-                if (args.length >= 2) {
-                    reason = Arrays.stream(args, 1, args.length)
-                            .collect(Collectors.joining(" "));
-                }
+            String reason = SmpxCore.messages().get("no-reason-provided");
+            if (args.length >= 2) {
+                reason = Arrays.stream(args, 1, args.length)
+                        .collect(Collectors.joining(" "));
+            }
 
-                if (target.player().isOnline()) {
-                    target.player().kick(Component.text(reason));
-                }
+            if (target.player().isOnline()) {
+                target.player().kick(Component.text(reason));
+            }
 
-                sender.sendMessage(SmpxCore.messages().component("kick", true, "target", target.name(), "reason", reason));
-            });
+            sender.sendMessage(SmpxCore.messages().component("kick", true, "target", target.name(), "reason", reason));
         }
     }
 

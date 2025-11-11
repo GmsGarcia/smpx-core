@@ -57,15 +57,13 @@ public class WhoIsCommand extends SmpxCommand {
 
         UUID uuid = targetOfflinePlayer.getUniqueId();
 
-        CompletableFuture<User> future = getUser(uuid);
-        future.thenAccept((user) -> {
-            if (user == null) {
-                sender.sendMessage(SmpxCore.messages().component("generic-error", true));
-                return;
-            }
+        User user = getUser(uuid);
+        if (user == null) {
+            sender.sendMessage(SmpxCore.messages().component("generic-error", true));
+            return;
+        }
 
-            sender.sendMessage(buildMessage(sender, user));
-        });
+        sender.sendMessage(buildMessage(sender, user));
     }
 
     @Override

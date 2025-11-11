@@ -1,10 +1,6 @@
 package pt.gmsgarcia.smpx.core.commands.economy;
 
-import com.mojang.brigadier.arguments.StringArgumentType;
-import com.mojang.brigadier.tree.LiteralCommandNode;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
-import io.papermc.paper.command.brigadier.Commands;
-import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
@@ -13,14 +9,9 @@ import org.jetbrains.annotations.NotNull;
 import pt.gmsgarcia.smpx.core.SmpxCore;
 import pt.gmsgarcia.smpx.core.commands.SmpxCommand;
 import pt.gmsgarcia.smpx.core.user.User;
-import pt.gmsgarcia.smpx.core.user.UserMapCallback;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
-import java.util.stream.Collectors;
 
 public class BalanceCommand extends SmpxCommand {
     public static final String NAME = "balance";
@@ -51,15 +42,13 @@ public class BalanceCommand extends SmpxCommand {
                 }
             }
 
-            CompletableFuture<User> future = getUser(targetName);
-            future.thenAccept((target) -> {
-                if (target == null) {
-                    sender.sendMessage(SmpxCore.messages().component("generic-error", true));
-                    return;
-                }
+            User target = getUser(targetName);
+            if (target == null) {
+                sender.sendMessage(SmpxCore.messages().component("generic-error", true));
+                return;
+            }
 
-                sender.sendMessage(SmpxCore.messages().component("balance", true, "balance", target.balance().toString()));
-            });
+            sender.sendMessage(SmpxCore.messages().component("balance", true, "balance", target.balance().toString()));
         }
     }
 

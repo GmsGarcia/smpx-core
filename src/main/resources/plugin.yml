@@ -2,6 +2,7 @@ name: ${name}
 version: ${version}
 main: pt.gmsgarcia.smpx.core.SmpxCore
 api-version: '1.21'
+softdepend: [Vault, LuckPerms]
 authors: [ GmsGarcia ]
 description: 'Smpx Core plugin'
 website: gmsgarcia.pt

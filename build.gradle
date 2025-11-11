@@ -10,19 +10,20 @@ repositories {
         name = "papermc-repo"
         url = "https://repo.papermc.io/repository/maven-public/"
     }
+    maven { url 'https://jitpack.io' }
+    maven { url 'https://repo.codemc.io/repository/creatorfromhell/' }
 }
 
 dependencies {
     compileOnly("io.papermc.paper:paper-api:1.21.10-R0.1-SNAPSHOT")
+    compileOnly("net.milkbowl.vault:VaultUnlockedAPI:2.16")
+
     implementation("com.zaxxer:HikariCP:4.0.3")
     implementation("com.google.guava:guava:33.5.0-jre")
 }
 
 tasks {
     runServer {
-        // Configure the Minecraft version for our task.
-        // This is the only required configuration besides applying the plugin.
-        // Your plugin's jar (or shadowJar if present) will be used automatically.
         minecraftVersion("1.21.10")
     }
     shadowJar {

@@ -1,9 +1,17 @@
 package pt.gmsgarcia.smpx.core;
 
+import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
+import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pt.gmsgarcia.smpx.core.commands.CommandRegister;
 import pt.gmsgarcia.smpx.core.config.SmpxConfig;
+import pt.gmsgarcia.smpx.core.economy.EconomyManager;
+import pt.gmsgarcia.smpx.core.economy.vault.VaultEconomyProvider;
+import pt.gmsgarcia.smpx.core.economy.vault.VaultUnlockedEconomyProvider;
 import pt.gmsgarcia.smpx.core.listeners.SmpxListeners;
 import pt.gmsgarcia.smpx.core.logger.SmpxLogger;
 import pt.gmsgarcia.smpx.core.messages.MessageManager;
@@ -11,11 +19,16 @@ import pt.gmsgarcia.smpx.core.storage.StorageManager;
 import pt.gmsgarcia.smpx.core.user.UserMap;
 
 public final class SmpxCore extends JavaPlugin {
+    private static final Logger log = LoggerFactory.getLogger(SmpxCore.class);
     private static SmpxLogger logger;
     private static SmpxConfig config;
     private static MessageManager messages;
     private static StorageManager storage;
-    private static UserMap userCache;
+    private static EconomyManager economy;
+    private static UserMap users;
+
+    private static VaultEconomyProvider vaultEconomyProvider;
+    private static VaultUnlockedEconomyProvider vaultUnlockedEconomyProvider;
 
     @Override
     public void onEnable() {
@@ -30,7 +43,32 @@ public final class SmpxCore extends JavaPlugin {
         storage = new StorageManager();
         storage.init();
 
-        userCache = new UserMap();
+        users = new UserMap();
+
+        economy = new EconomyManager();
+
+        // vault api
+        if (getServer().getPluginManager().getPlugin("Vault") != null) {
+            // vault unlocked
+            try {
+                Class.forName("net.milkbowl.vault2.economy.Economy");
+                vaultUnlockedEconomyProvider = new VaultUnlockedEconomyProvider();
+                getServer().getServicesManager().register(net.milkbowl.vault2.economy.Economy.class, vaultUnlockedEconomyProvider, this, ServicePriority.Highest);
+                logger().info("Hooked into Vault Unlocked as an Economy provider!");
+            } catch (Exception e) {
+                logger().warning("Unable to connect to Vault Unlocked");
+            }
+
+            // vault
+            try {
+                Class.forName("net.milkbowl.vault.economy.Economy");
+                vaultEconomyProvider = new VaultEconomyProvider();
+                getServer().getServicesManager().register(net.milkbowl.vault.economy.Economy.class, vaultEconomyProvider, this, ServicePriority.Highest);
+                logger().info("Hooked into Vault as an Economy provider!");
+            } catch (Exception e) {
+                logger().warning("Unable to connect to Vault");
+            }
+        }
 
         // commands
         CommandRegister.registerCommands();
@@ -68,22 +106,10 @@ public final class SmpxCore extends JavaPlugin {
     }
 
     public static UserMap users() {
-        return userCache;
+        return users;
     }
 
-    public static void runTaskAsync(Runnable task) {
-        try {
-            Bukkit.getScheduler().runTaskAsynchronously(instance(), task);
-        } catch (IllegalArgumentException e) {
-            SmpxCore.logger().severe(e.getMessage());
-        }
-    }
-
-    public static void runTask(Runnable task) {
-        try {
-            Bukkit.getScheduler().runTaskAsynchronously(instance(), task);
-        } catch (IllegalArgumentException e) {
-            SmpxCore.logger().severe(e.getMessage());
-        }
+    public static EconomyManager economy() {
+        return economy;
     }
 }
