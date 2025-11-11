@@ -35,7 +35,7 @@ public class User {
         if (offline.isOnline()) {
             this.player = Bukkit.getPlayer(uuid);
         } else {
-            this.player = Bukkit.getPlayer(uuid); // TODO: make a wrapper for offlineplayer
+            this.player = Bukkit.getPlayer(uuid);
         }
     }
 
@@ -52,7 +52,7 @@ public class User {
         if (offline.isOnline()) {
             this.player = Bukkit.getPlayer(uuid);
         } else {
-            this.player = Bukkit.getPlayer(uuid); // TODO: make a wrapper for offlineplayer
+            this.player = Bukkit.getPlayer(uuid);
         }
     }
 

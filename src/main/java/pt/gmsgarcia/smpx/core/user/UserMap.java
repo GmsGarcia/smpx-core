@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import pt.gmsgarcia.smpx.core.SmpxCore;
 
+import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -121,8 +122,13 @@ public class UserMap {
 
     public User create(UUID uuid) {
         OfflinePlayer player = Bukkit.getOfflinePlayer(uuid);
+        return this.create(uuid, player.getName(), true);
+    }
 
-        User user = new User(uuid, player.getName(), SmpxCore.config().economy().initialBalance(), System.currentTimeMillis());
+    public User create(UUID uuid, String name, boolean isPlayer) {
+        BigDecimal initialBalance = isPlayer ? SmpxCore.config().economy().initialBalance() : BigDecimal.ZERO;
+
+        User user = new User(uuid, name, initialBalance, System.currentTimeMillis());
         SmpxCore.storage().layer().create(user);
 
         return user;

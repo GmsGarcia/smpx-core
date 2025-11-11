@@ -91,12 +91,16 @@ public class EconomyManager {
         return new EconomyResponse(amount, user.balance(), EconomyResponse.ResponseType.SUCCESS, "");
     }
 
-    public boolean createPlayerAccount(UUID uuid) {
+    public boolean createPlayerAccount(UUID uuid, String name) {
+        return this.createPlayerAccount(uuid, name, false);
+    }
+
+    public boolean createPlayerAccount(UUID uuid, String name, boolean isPlayer) {
         // TODO: check if player has played before...
         if (SmpxCore.users().exists(uuid)) {
             return false;
         }
-        SmpxCore.users().create(uuid);
+        SmpxCore.users().create(uuid, name, isPlayer);
         return true;
     }
 

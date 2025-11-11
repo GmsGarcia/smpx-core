@@ -9,7 +9,6 @@ import pt.gmsgarcia.smpx.core.SmpxCore;
 import java.math.BigDecimal;
 import java.util.*;
 
-// TODO: gotta implement all these methods...
 public class VaultUnlockedEconomyProvider implements Economy {
     @Override
     public boolean isEnabled() {
@@ -83,22 +82,22 @@ public class VaultUnlockedEconomyProvider implements Economy {
 
     @Override
     public boolean createAccount(@NotNull UUID accountID, @NotNull String name) {
-        return SmpxCore.economy().createPlayerAccount(accountID);
+        return SmpxCore.economy().createPlayerAccount(accountID, name);
     }
 
     @Override
     public boolean createAccount(@NotNull UUID accountID, @NotNull String name, boolean player) {
-        return SmpxCore.economy().createPlayerAccount(accountID);
+        return SmpxCore.economy().createPlayerAccount(accountID, name);
     }
 
     @Override
     public boolean createAccount(@NotNull UUID accountID, @NotNull String name, @NotNull String worldName) {
-        return SmpxCore.economy().createPlayerAccount(accountID);
+        return SmpxCore.economy().createPlayerAccount(accountID, name);
     }
 
     @Override
     public boolean createAccount(@NotNull UUID accountID, @NotNull String name, @NotNull String worldName, boolean player) {
-        return SmpxCore.economy().createPlayerAccount(accountID);
+        return SmpxCore.economy().createPlayerAccount(accountID, name);
     }
 
     // TODO: get all accounts's UUID ?

@@ -179,26 +179,28 @@ public class VaultEconomyProvider implements Economy {
     @Override
     public boolean createPlayerAccount(String playerName) {
         UUID uuid = Bukkit.getPlayerUniqueId(playerName);
-        return SmpxCore.economy().createPlayerAccount(uuid);
+        return SmpxCore.economy().createPlayerAccount(uuid, playerName);
     }
 
     @Override
     public boolean createPlayerAccount(OfflinePlayer player) {
         UUID uuid = player.getUniqueId();
-        return SmpxCore.economy().createPlayerAccount(uuid);
+        String playerName = player.getName();
+        return SmpxCore.economy().createPlayerAccount(uuid, playerName);
     }
 
     @SuppressWarnings("deprecation")
     @Override
     public boolean createPlayerAccount(String playerName, String worldName) {
         UUID uuid = Bukkit.getPlayerUniqueId(playerName);
-        return SmpxCore.economy().createPlayerAccount(uuid);
+        return SmpxCore.economy().createPlayerAccount(uuid, playerName);
     }
 
     @Override
     public boolean createPlayerAccount(OfflinePlayer player, String worldName) {
         UUID uuid = player.getUniqueId();
-        return SmpxCore.economy().createPlayerAccount(uuid);
+        String playerName = player.getName();
+        return SmpxCore.economy().createPlayerAccount(uuid, playerName);
     }
 
     // banks - not implemented... for now?
