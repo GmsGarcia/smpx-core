@@ -1,7 +1,7 @@
 prefix: "<dark_aqua>[<aqua>SMPX<dark_aqua>] <white>"
 messages:
   # generic messages
-  no-permission: "<red>You don't have permission to do that! :c"
+  no-permission: "<red>You do not have permission to do that! :c"
   generic-error: "<red>An error has occurred. Please report this to an administrator."
   player-not-found: "<red>Player not found: %player%"
   invalid-arguments-count: "<red>Invalid number of arguments."
@@ -10,7 +10,7 @@ messages:
 
   # economy messages
   balance: "Balance: $%balance%"
-  cant-afford: "You can't afford that transaction."
+  cant-afford: "You can not afford that transaction."
   addbalance-sender: "Set %receiver%'s balance to $%balance%"
   addbalance-receiver: "Your balance was set to $%balance% by %sender%"
   removebalance-sender: "Set %receiver%'s balance to $%balance%"

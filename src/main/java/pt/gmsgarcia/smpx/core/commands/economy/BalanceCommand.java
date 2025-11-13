@@ -7,49 +7,57 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import pt.gmsgarcia.smpx.core.SmpxCore;
-import pt.gmsgarcia.smpx.core.commands.SmpxCommand;
+import pt.gmsgarcia.smpx.core.account.Account;
+import pt.gmsgarcia.smpx.core.commands.ISmpxCommand;
 import pt.gmsgarcia.smpx.core.user.User;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class BalanceCommand extends SmpxCommand {
+public class BalanceCommand implements ISmpxCommand {
     public static final String NAME = "balance";
     public static final String DESCRIPTION = "Get a player's balance";
     private static final String DEFAULT_PERMISSION = "smpx.economy.balance";
     private static final String ADMIN_PERMISSION = "smpx.economy.balance.*";
 
-    public BalanceCommand() {
-        super(NAME, DEFAULT_PERMISSION);
-    }
+    public BalanceCommand() {}
 
     @Override
     public void execute(CommandSourceStack source, String @NotNull [] args) {
         CommandSender sender = source.getSender();
 
-        if (sender.hasPermission(DEFAULT_PERMISSION)) {
-            String targetName = sender.getName();
+        if (!sender.hasPermission(DEFAULT_PERMISSION)) {
+            sender.sendMessage(SmpxCore.messages().component("no-permission", false));
+            return;
+        }
 
-            if (args.length != 0) {
-                if (sender.hasPermission(ADMIN_PERMISSION)) {
-                    targetName = args[0];
+        String targetName = sender.getName();
 
-                    OfflinePlayer targetOfflinePlayer = Bukkit.getOfflinePlayer(targetName);
-                    if (!targetOfflinePlayer.hasPlayedBefore() && !targetOfflinePlayer.isOnline()) {
-                        sender.sendMessage(SmpxCore.messages().component("player-not-found", true, "player", targetName));
-                        return;
-                    }
+        if (args.length != 0) {
+            if (sender.hasPermission(ADMIN_PERMISSION)) {
+                targetName = args[0];
+
+                OfflinePlayer targetOfflinePlayer = Bukkit.getOfflinePlayer(targetName);
+                if (!targetOfflinePlayer.hasPlayedBefore() && !targetOfflinePlayer.isOnline()) {
+                    sender.sendMessage(SmpxCore.messages().component("player-not-found", true, "player", targetName));
+                    return;
                 }
             }
-
-            User target = getUser(targetName);
-            if (target == null) {
-                sender.sendMessage(SmpxCore.messages().component("generic-error", true));
-                return;
-            }
-
-            sender.sendMessage(SmpxCore.messages().component("balance", true, "balance", target.balance().toString()));
         }
+
+        User target = getUser(targetName);
+        if (target == null) {
+            sender.sendMessage(SmpxCore.messages().component("generic-error", true));
+            return;
+        }
+
+        Account account = target.account();
+        if (account == null) {
+            sender.sendMessage(SmpxCore.messages().component("generic-error", true));
+            return;
+        }
+
+        sender.sendMessage(SmpxCore.messages().component("balance", true, "balance", account.balance().toString()));
     }
 
     @Override
@@ -58,7 +66,9 @@ public class BalanceCommand extends SmpxCommand {
 
         if (sender.hasPermission(ADMIN_PERMISSION)) {
             if (args.length == 0) {
-                return Bukkit.getOnlinePlayers().stream().map(Player::getName).toList();
+                return Bukkit.getOnlinePlayers().stream()
+                        .map(Player::getName)
+                        .toList();
             }
 
             if (args.length == 1) {

@@ -4,31 +4,29 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.common.cache.RemovalListener;
+import com.google.common.util.concurrent.UncheckedExecutionException;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import pt.gmsgarcia.smpx.core.SmpxCore;
 
-import java.math.BigDecimal;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
 /**
- * This class handles the loading and caching of User objects.
+ * This class handles the loading and caching of {@link User} objects.
  */
-public class UserMap {
+public class UsersCache {
     private final Map<UUID, User> online = new ConcurrentHashMap<>();
 
     private final LoadingCache<UUID, User> cache = CacheBuilder.newBuilder()
             .expireAfterAccess(10, TimeUnit.MINUTES) // keep offline users in memory for 10 mins after last use
             .removalListener((RemovalListener<UUID, User>) notification -> {
                 if (notification.getValue() != null) {
-                    SmpxCore.storage().layer().save(notification.getValue());
+                    SmpxCore.storage().layer().saveUser(notification.getValue());
                     SmpxCore.logger().info("Saved & removed cached user: " + notification.getKey());
                 }
             })
@@ -36,7 +34,7 @@ public class UserMap {
                 @Override
                 public @NotNull User load(@NotNull UUID uuid) throws Exception {
                     // Load user from storage when not found in cache
-                    User user = SmpxCore.storage().layer().load(uuid);
+                    User user = SmpxCore.storage().layer().getUser(uuid);
 
                     if (user == null) {
                         throw new Exception("User not found for UUID: " + uuid);
@@ -46,7 +44,9 @@ public class UserMap {
                 }
             });
 
-    /* online players load */
+    /**
+     * Loads the user with the specified {@link UUID} in the online map.
+     */
     public void load(Player player) {
         UUID uuid = player.getUniqueId();
 
@@ -60,11 +60,10 @@ public class UserMap {
             user = cache.getUnchecked(uuid);
 
             if (!user.name().equals(player.getName())) {
-                SmpxCore.storage().layer().savePreviousName(user);
+                SmpxCore.storage().layer().createPreviousUsername(user);
                 user.updateName(player.getName());
-                SmpxCore.storage().layer().save(user);
             }
-        } catch (Exception e) {
+        } catch (UncheckedExecutionException e) {
             user = this.create(uuid);
         }
 
@@ -72,97 +71,76 @@ public class UserMap {
         SmpxCore.logger().info("Loaded user into online map: " + player.getName());
     }
 
-    /* online players unload */
+    /**
+     * Unloads the user with the specified {@link UUID} from the online map
+     * and put it in {@code cache} (for 10 minutes).
+     */
     public void unload(UUID uuid) {
         User user = online.remove(uuid);
-
         if (user != null) {
             user.setLastSeen(System.currentTimeMillis());
             cache.put(uuid, user);
-
-            SmpxCore.storage().layer().save(user);
-
             SmpxCore.logger().info("Unloaded user from online map: " + user.name());
         }
     }
 
-    public User get(UUID uuid) {
-        if (online.containsKey(uuid)) {
-            return this.online.get(uuid);
+    /**
+     * Invalidates the user with the specified {@link UUID} in cache.
+     * If no {@link UUID} is provided ({@code null}), it will proceed
+     * to invalidate all users in cache.
+     */
+    public void invalidate(UUID uuid) {
+        if (uuid == null) {
+            cache.invalidateAll();
+        } else {
+            cache.invalidate(uuid);
         }
+    }
 
-        User user;
+    /**
+     * Returns the user with the specified {@link UUID}. If no value is
+     * found returns {@code null}.
+     */
+    public User get(UUID uuid) {
+        User user = online.get(uuid);
+        if (user != null) return user;
 
         try {
-            user = cache.getUnchecked(uuid);
-            return user;
+            return cache.getUnchecked(uuid);
         } catch (Exception e) {
             return null;
         }
     }
 
-    public HashMap<UUID, User> get(Collection<UUID> uuids) {
-        HashMap<UUID, User> users = new HashMap<>();
-
-        for (UUID uuid : uuids) {
-            if (online.containsKey(uuid)) {
-                users.put(uuid, this.online.get(uuid));
-                continue;
-            }
-
-            try {
-                users.put(uuid, cache.getUnchecked(uuid));
-            } catch (Exception e) {
-                users.put(uuid, null);
-            }
-        }
-
-        return users;
-    }
-
+    /**
+     * Creates a new user with the specified {@link UUID}.
+     */
     public User create(UUID uuid) {
         OfflinePlayer player = Bukkit.getOfflinePlayer(uuid);
-        return this.create(uuid, player.getName(), true);
-    }
 
-    public User create(UUID uuid, String name, boolean isPlayer) {
-        BigDecimal initialBalance = isPlayer ? SmpxCore.config().economy().initialBalance() : BigDecimal.ZERO;
-
-        User user = new User(uuid, name, initialBalance, System.currentTimeMillis());
-        SmpxCore.storage().layer().create(user);
+        User user = User.build(uuid, player.getName());
+        SmpxCore.storage().layer().createUser(user);
 
         return user;
     }
 
-    public boolean exists(UUID uuid) {
-        if (online.containsKey(uuid)) {
-            return true;
-        }
-
-        try {
-            cache.getUnchecked(uuid);
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    /* force save */
+    /**
+     * Forces a save for the user with the specified {@link UUID}.
+     * If no {@link UUID} is provided ({@code null}), it will proceed
+     * to save all users in the online map and cache.
+     */
     public void save(UUID uuid) {
-        User user = this.get(uuid);
-
-        if (user != null) {
-            SmpxCore.storage().layer().save(user);
+        if (uuid == null) {
+            online.values().forEach(user -> SmpxCore.storage().layer().saveUser(user));
+            cache.asMap().values().forEach(user -> SmpxCore.storage().layer().saveUser(user));
+            SmpxCore.accounts().save(null);
+            return;
         }
-    }
 
-    /* force save */
-    public void saveAll() {
-        online.values().forEach(user -> SmpxCore.storage().layer().save(user));
-        cache.asMap().values().forEach(user -> SmpxCore.storage().layer().save(user));
-    }
-
-    public void invalidate(UUID uuid) {
-        cache.invalidate(uuid);
+        User user = this.get(uuid);
+        if (user != null) {
+            SmpxCore.storage().layer().saveUser(user);
+            SmpxCore.accounts().save(uuid);
+        }
     }
 }

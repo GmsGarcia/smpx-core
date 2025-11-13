@@ -7,7 +7,10 @@ import org.jetbrains.annotations.NotNull;
 import pt.gmsgarcia.smpx.core.SmpxCore;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.Collection;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 
 public class VaultUnlockedEconomyProvider implements Economy {
     @Override
@@ -57,47 +60,47 @@ public class VaultUnlockedEconomyProvider implements Economy {
 
     @Override
     public boolean hasCurrency(@NotNull String currency) {
-        return currency.equalsIgnoreCase(SmpxCore.economy().currency());
+        return SmpxCore.economy().hasCurrency(currency);
     }
 
     @Override
     public @NotNull String getDefaultCurrency(@NotNull String pluginName) {
-        return SmpxCore.economy().currency();
+        return SmpxCore.economy().currency("default");
     }
 
     @Override
     public @NotNull String defaultCurrencyNamePlural(@NotNull String pluginName) {
-        return SmpxCore.economy().currencyNamePlural();
+        return SmpxCore.economy().currencyNamePlural("default");
     }
 
     @Override
     public @NotNull String defaultCurrencyNameSingular(@NotNull String pluginName) {
-        return SmpxCore.economy().currencyNameSingular();
+        return SmpxCore.economy().currencyNameSingular("default");
     }
 
     @Override
     public @NotNull Collection<String> currencies() {
-        return List.of(SmpxCore.economy().currency());
+        return SmpxCore.economy().currencies();
     }
 
     @Override
     public boolean createAccount(@NotNull UUID accountID, @NotNull String name) {
-        return SmpxCore.economy().createPlayerAccount(accountID, name);
+        return SmpxCore.economy().createAccount(accountID, name);
     }
 
     @Override
     public boolean createAccount(@NotNull UUID accountID, @NotNull String name, boolean player) {
-        return SmpxCore.economy().createPlayerAccount(accountID, name);
+        return SmpxCore.economy().createAccount(accountID, name);
     }
 
     @Override
     public boolean createAccount(@NotNull UUID accountID, @NotNull String name, @NotNull String worldName) {
-        return SmpxCore.economy().createPlayerAccount(accountID, name);
+        return SmpxCore.economy().createAccount(accountID, name);
     }
 
     @Override
     public boolean createAccount(@NotNull UUID accountID, @NotNull String name, @NotNull String worldName, boolean player) {
-        return SmpxCore.economy().createPlayerAccount(accountID, name);
+        return SmpxCore.economy().createAccount(accountID, name);
     }
 
     // TODO: get all accounts's UUID ?
@@ -138,12 +141,12 @@ public class VaultUnlockedEconomyProvider implements Economy {
 
     @Override
     public boolean accountSupportsCurrency(@NotNull String plugin, @NotNull UUID accountID, @NotNull String currency) {
-        return currency.equalsIgnoreCase(SmpxCore.economy().currency());
+        return SmpxCore.economy().currencies().contains(currency);
     }
 
     @Override
     public boolean accountSupportsCurrency(@NotNull String plugin, @NotNull UUID accountID, @NotNull String currency, @NotNull String world) {
-        return currency.equalsIgnoreCase(SmpxCore.economy().currency());
+        return SmpxCore.economy().currencies().contains(currency);
     }
 
     @Override
@@ -158,7 +161,7 @@ public class VaultUnlockedEconomyProvider implements Economy {
 
     @Override
     public @NotNull BigDecimal getBalance(@NotNull String pluginName, @NotNull UUID accountID, @NotNull String world, @NotNull String currency) {
-        return SmpxCore.economy().getBalance(accountID);
+        return SmpxCore.economy().getBalance(accountID, currency);
     }
 
     @Override
@@ -173,40 +176,40 @@ public class VaultUnlockedEconomyProvider implements Economy {
 
     @Override
     public boolean has(@NotNull String pluginName, @NotNull UUID accountID, @NotNull String worldName, @NotNull String currency, @NotNull BigDecimal amount) {
-        return SmpxCore.economy().has(accountID, amount.doubleValue());
+        return SmpxCore.economy().has(accountID, currency, amount.doubleValue());
     }
 
     @Override
     public @NotNull EconomyResponse withdraw(@NotNull String pluginName, @NotNull UUID accountID, @NotNull BigDecimal amount) {
-        return SmpxCore.economy().withdrawPlayerUnlocked(accountID, amount);
+        return SmpxCore.economy().withdrawAccountUnlocked(accountID, amount);
     }
 
     @Override
     public @NotNull EconomyResponse withdraw(@NotNull String pluginName, @NotNull UUID accountID, @NotNull String worldName, @NotNull BigDecimal amount) {
-        return SmpxCore.economy().withdrawPlayerUnlocked(accountID, amount);
+        return SmpxCore.economy().withdrawAccountUnlocked(accountID, amount);
     }
 
     @Override
     public @NotNull EconomyResponse withdraw(@NotNull String pluginName, @NotNull UUID accountID, @NotNull String worldName, @NotNull String currency, @NotNull BigDecimal amount) {
-        return SmpxCore.economy().withdrawPlayerUnlocked(accountID, amount);
+        return SmpxCore.economy().withdrawAccountUnlocked(accountID, currency, amount);
     }
 
     @Override
     public @NotNull EconomyResponse deposit(@NotNull String pluginName, @NotNull UUID accountID, @NotNull BigDecimal amount) {
-        return SmpxCore.economy().depositPlayerUnlocked(accountID, amount);
+        return SmpxCore.economy().depositAccountUnlocked(accountID, amount);
     }
 
     @Override
     public @NotNull EconomyResponse deposit(@NotNull String pluginName, @NotNull UUID accountID, @NotNull String worldName, @NotNull BigDecimal amount) {
-        return SmpxCore.economy().depositPlayerUnlocked(accountID, amount);
+        return SmpxCore.economy().depositAccountUnlocked(accountID, amount);
     }
 
     @Override
     public @NotNull EconomyResponse deposit(@NotNull String pluginName, @NotNull UUID accountID, @NotNull String worldName, @NotNull String currency, @NotNull BigDecimal amount) {
-        return SmpxCore.economy().depositPlayerUnlocked(accountID, amount);
+        return SmpxCore.economy().depositAccountUnlocked(accountID, currency, amount);
     }
 
-    // auto-generated methods...
+    // auto-generated methods for shared accounts...
     @Override
     public boolean createSharedAccount(@NotNull String pluginName, @NotNull UUID accountID, @NotNull String name, @NotNull UUID owner) {
         return false;

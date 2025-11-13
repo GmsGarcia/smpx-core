@@ -7,7 +7,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import pt.gmsgarcia.smpx.core.SmpxCore;
-import pt.gmsgarcia.smpx.core.commands.SmpxCommand;
+import pt.gmsgarcia.smpx.core.commands.ISmpxCommand;
 import pt.gmsgarcia.smpx.core.user.User;
 
 import java.util.ArrayList;
@@ -15,14 +15,12 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
-public class KickCommand extends SmpxCommand {
+public class KickCommand implements ISmpxCommand {
     public static final String NAME = "kick";
     public static final String DESCRIPTION = "Kick a player";
     protected static final String PERMISSION = "smpx.admin.kick";
 
-    public KickCommand() {
-        super(NAME, PERMISSION);
-    }
+    public KickCommand() {}
 
     @Override
     public void execute(CommandSourceStack source, String @NotNull [] args) {

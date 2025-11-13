@@ -4,25 +4,26 @@ import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import pt.gmsgarcia.smpx.core.account.AccountsCache;
 import pt.gmsgarcia.smpx.core.commands.CommandRegister;
 import pt.gmsgarcia.smpx.core.config.SmpxConfig;
-import pt.gmsgarcia.smpx.core.economy.EconomyManager;
+import pt.gmsgarcia.smpx.core.economy.EconomyBridge;
 import pt.gmsgarcia.smpx.core.economy.vault.VaultEconomyProvider;
 import pt.gmsgarcia.smpx.core.economy.vault.VaultUnlockedEconomyProvider;
 import pt.gmsgarcia.smpx.core.listeners.SmpxListeners;
 import pt.gmsgarcia.smpx.core.logger.SmpxLogger;
 import pt.gmsgarcia.smpx.core.messages.MessageManager;
 import pt.gmsgarcia.smpx.core.storage.StorageManager;
-import pt.gmsgarcia.smpx.core.user.UserMap;
+import pt.gmsgarcia.smpx.core.user.UsersCache;
 
 public final class SmpxCore extends JavaPlugin {
-    private static final Logger log = LoggerFactory.getLogger(SmpxCore.class);
     private static SmpxLogger logger;
     private static SmpxConfig config;
     private static MessageManager messages;
     private static StorageManager storage;
-    private static EconomyManager economy;
-    private static UserMap users;
+    private static EconomyBridge economy;
+    private static UsersCache users;
+    private static AccountsCache accounts;
 
     private static VaultEconomyProvider vaultEconomyProvider;
     private static VaultUnlockedEconomyProvider vaultUnlockedEconomyProvider;
@@ -40,9 +41,10 @@ public final class SmpxCore extends JavaPlugin {
         storage = new StorageManager();
         storage.init();
 
-        users = new UserMap();
+        users = new UsersCache();
+        accounts = new AccountsCache();
 
-        economy = new EconomyManager();
+        economy = new EconomyBridge();
 
         // vault api
         if (getServer().getPluginManager().getPlugin("Vault") != null) {
@@ -78,7 +80,7 @@ public final class SmpxCore extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        users().saveAll();
+        users().save(null);
     }
 
     // getters...
@@ -102,11 +104,15 @@ public final class SmpxCore extends JavaPlugin {
         return storage;
     }
 
-    public static UserMap users() {
+    public static UsersCache users() {
         return users;
     }
 
-    public static EconomyManager economy() {
+    public static AccountsCache accounts() {
+        return accounts;
+    }
+
+    public static EconomyBridge economy() {
         return economy;
     }
 }

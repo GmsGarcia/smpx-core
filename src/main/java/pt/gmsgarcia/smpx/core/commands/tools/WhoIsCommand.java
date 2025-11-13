@@ -8,9 +8,9 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import pt.gmsgarcia.smpx.core.SmpxCore;
-import pt.gmsgarcia.smpx.core.commands.SmpxCommand;
+import pt.gmsgarcia.smpx.core.commands.ISmpxCommand;
 import pt.gmsgarcia.smpx.core.user.User;
-import pt.gmsgarcia.smpx.core.user.UserName;
+import pt.gmsgarcia.smpx.core.user.Username;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.UUID;
 
-public class WhoIsCommand extends SmpxCommand {
+public class WhoIsCommand implements ISmpxCommand {
     public static final String NAME = "whois";
     public static final String DESCRIPTION = "Get a player's info";
     private static final String DEFAULT_PERMISSION = "smpx.tools.whois";
@@ -28,13 +28,16 @@ public class WhoIsCommand extends SmpxCommand {
 
     private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
-    public WhoIsCommand() {
-        super(NAME, DEFAULT_PERMISSION);
-    }
+    public WhoIsCommand() {}
 
     @Override
-    public void execute(CommandSourceStack source, String[] args) {
+    public void execute(CommandSourceStack source, String @NotNull [] args) {
         CommandSender sender = source.getSender();
+
+        if (!sender.hasPermission(DEFAULT_PERMISSION)) {
+            sender.sendMessage(SmpxCore.messages().component("no-permission", false));
+            return;
+        }
 
         if (args.length == 0 && source.getSender() instanceof ConsoleCommandSender) {
             sender.sendMessage(SmpxCore.messages().component("invalid-sender", true));
@@ -71,7 +74,9 @@ public class WhoIsCommand extends SmpxCommand {
 
         if (sender.hasPermission(ADMIN_PERMISSION)) {
             if (args.length == 0) {
-                return Bukkit.getOnlinePlayers().stream().map(Player::getName).toList();
+                return Bukkit.getOnlinePlayers().stream()
+                        .map(Player::getName)
+                        .toList();
             }
 
             if (args.length == 1) {
@@ -112,7 +117,7 @@ public class WhoIsCommand extends SmpxCommand {
                 );
 
                 message.append(target.name()).append(" (since ").append(lastUsage.format(DATE_TIME_FORMATTER)).append(")").append("\n");
-                for (UserName p : target.previousNames()) {
+                for (Username p : target.previousNames()) {
                     lastUsage = LocalDateTime.ofInstant(
                             Instant.ofEpochMilli(p.lastUsage()),
                             ZoneId.systemDefault()

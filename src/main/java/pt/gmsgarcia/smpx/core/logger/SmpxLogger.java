@@ -22,7 +22,7 @@ public class SmpxLogger {
     }
 
     public void info(String message) {
-        if (DEBUG){
+        if (DEBUG) {
             this.logger.info(BLUE + message + RESET);
         } else {
             this.logger.info(message);
@@ -30,7 +30,7 @@ public class SmpxLogger {
     }
 
     public void warning(String message) {
-        if (DEBUG){
+        if (DEBUG) {
             this.logger.severe(YELLOW + message + RESET);
         } else {
             this.logger.warning(message);
@@ -38,7 +38,7 @@ public class SmpxLogger {
     }
 
     public void severe(String message) {
-        if (DEBUG){
+        if (DEBUG) {
             this.logger.severe(RED + message + RESET);
         } else {
             this.logger.severe(message);

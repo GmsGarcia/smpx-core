@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
+@SuppressWarnings("deprecation")
 public class VaultEconomyProvider implements Economy {
     @Override
     public boolean isEnabled() {
@@ -33,12 +34,12 @@ public class VaultEconomyProvider implements Economy {
 
     @Override
     public String currencyNamePlural() {
-        return SmpxCore.economy().currencyNamePlural();
+        return SmpxCore.economy().currencyNamePlural("default");
     }
 
     @Override
     public String currencyNameSingular() {
-        return SmpxCore.economy().currencyNameSingular();
+        return SmpxCore.economy().currencyNameSingular("default");
     }
 
     @SuppressWarnings("deprecation")
@@ -123,84 +124,84 @@ public class VaultEconomyProvider implements Economy {
     @Override
     public EconomyResponse withdrawPlayer(String playerName, double amount) {
         UUID uuid = Bukkit.getPlayerUniqueId(playerName);
-        return SmpxCore.economy().withdrawPlayer(uuid, amount);
+        return SmpxCore.economy().withdrawAccount(uuid, amount);
     }
 
     @SuppressWarnings("deprecation")
     @Override
     public EconomyResponse withdrawPlayer(OfflinePlayer player, double amount) {
         UUID uuid = player.getUniqueId();
-        return SmpxCore.economy().withdrawPlayer(uuid, amount);
+        return SmpxCore.economy().withdrawAccount(uuid, amount);
     }
 
     @SuppressWarnings("deprecation")
     @Override
     public EconomyResponse withdrawPlayer(String playerName, String worldName, double amount) {
         UUID uuid = Bukkit.getPlayerUniqueId(playerName);
-        return SmpxCore.economy().withdrawPlayer(uuid, amount);
+        return SmpxCore.economy().withdrawAccount(uuid, amount);
     }
 
     @SuppressWarnings("deprecation")
     @Override
     public EconomyResponse withdrawPlayer(OfflinePlayer player, String worldName, double amount) {
         UUID uuid = player.getUniqueId();
-        return SmpxCore.economy().withdrawPlayer(uuid, amount);
+        return SmpxCore.economy().withdrawAccount(uuid, amount);
     }
 
     @SuppressWarnings("deprecation")
     @Override
     public EconomyResponse depositPlayer(String playerName, double amount) {
         UUID uuid = Bukkit.getPlayerUniqueId(playerName);
-        return SmpxCore.economy().depositPlayer(uuid, amount);
+        return SmpxCore.economy().depositAccount(uuid, amount);
     }
 
     @SuppressWarnings("deprecation")
     @Override
     public EconomyResponse depositPlayer(OfflinePlayer player, double amount) {
         UUID uuid = player.getUniqueId();
-        return SmpxCore.economy().depositPlayer(uuid, amount);
+        return SmpxCore.economy().depositAccount(uuid, amount);
     }
 
     @SuppressWarnings("deprecation")
     @Override
     public EconomyResponse depositPlayer(String playerName, String worldName, double amount) {
         UUID uuid = Bukkit.getPlayerUniqueId(playerName);
-        return SmpxCore.economy().depositPlayer(uuid, amount);
+        return SmpxCore.economy().depositAccount(uuid, amount);
     }
 
     @SuppressWarnings("deprecation")
     @Override
     public EconomyResponse depositPlayer(OfflinePlayer player, String worldName, double amount) {
         UUID uuid = player.getUniqueId();
-        return SmpxCore.economy().depositPlayer(uuid, amount);
+        return SmpxCore.economy().depositAccount(uuid, amount);
     }
 
     @SuppressWarnings("deprecation")
     @Override
     public boolean createPlayerAccount(String playerName) {
         UUID uuid = Bukkit.getPlayerUniqueId(playerName);
-        return SmpxCore.economy().createPlayerAccount(uuid, playerName);
+        return SmpxCore.economy().createAccount(uuid, playerName);
     }
 
     @Override
     public boolean createPlayerAccount(OfflinePlayer player) {
         UUID uuid = player.getUniqueId();
         String playerName = player.getName();
-        return SmpxCore.economy().createPlayerAccount(uuid, playerName);
+        return SmpxCore.economy().createAccount(uuid, playerName);
     }
 
     @SuppressWarnings("deprecation")
     @Override
     public boolean createPlayerAccount(String playerName, String worldName) {
         UUID uuid = Bukkit.getPlayerUniqueId(playerName);
-        return SmpxCore.economy().createPlayerAccount(uuid, playerName);
+        return SmpxCore.economy().createAccount(uuid, playerName);
     }
 
     @Override
     public boolean createPlayerAccount(OfflinePlayer player, String worldName) {
         UUID uuid = player.getUniqueId();
         String playerName = player.getName();
-        return SmpxCore.economy().createPlayerAccount(uuid, playerName);
+        return SmpxCore.economy().createAccount(uuid, playerName);
     }
 
     // banks - not implemented... for now?

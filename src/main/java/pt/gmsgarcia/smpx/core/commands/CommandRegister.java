@@ -1,6 +1,5 @@
 package pt.gmsgarcia.smpx.core.commands;
 
-import org.bukkit.command.Command;
 import pt.gmsgarcia.smpx.core.SmpxCore;
 import pt.gmsgarcia.smpx.core.commands.admin.BanCommand;
 import pt.gmsgarcia.smpx.core.commands.admin.BanIpCommand;
@@ -12,14 +11,7 @@ import pt.gmsgarcia.smpx.core.commands.economy.*;
 import pt.gmsgarcia.smpx.core.commands.tools.HelpCommand;
 import pt.gmsgarcia.smpx.core.commands.tools.WhoIsCommand;
 
-import java.util.List;
-import java.util.Map;
-
 public class CommandRegister {
-    private static Map<String, Command> commands;
-    private static List<String> namespaces;
-    private static Map<String, Map<String, Command>> commandsByNamespace;
-
     private CommandRegister() {}
 
     public static void registerCommands() {

@@ -8,5 +8,6 @@ public abstract class SmpxListeners {
     public static void registerListeners() {
         SmpxCore.instance().getServer().getPluginManager().registerEvents(new PluginListener(), SmpxCore.instance());
         SmpxCore.instance().getServer().getPluginManager().registerEvents(new PlayerListener(), SmpxCore.instance());
+        SmpxCore.instance().getServer().getPluginManager().registerEvents(new CommandListener(), SmpxCore.instance());
     }
 }

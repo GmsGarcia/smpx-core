@@ -12,7 +12,8 @@ public class SmpxConfig {
     private EconomyConfig economy;
     private StorageConfig storage;
 
-    public SmpxConfig() {}
+    public SmpxConfig() {
+    }
 
     public void load() {
         file = new File(SmpxCore.instance().getDataFolder(), "config.yml");

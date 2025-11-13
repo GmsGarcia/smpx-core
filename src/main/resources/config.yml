@@ -1,14 +1,46 @@
 economy:
-  initial-balance: 1000
-  max-balance: 1000000
+  # WARNING: debt settings will be only applied to the default currency!
+  # custom currencies won't allow debts!
+  allow-debt: false # i can think of a few reasons to leave this disabled o-o
+  max-debt: 1000 # REQUIRES allow-debt TO BE TRUE. set this to 0 to disable. lowest balance: -{max-debt}
+
+  currencies:
+    default: # DO NOT REMOVE THIS CURRENCY
+      id: "default" # DO NOT CHANGE THIS ID
+      name-plural: "dollars"
+      name-singular: "dollar"
+      symbol: "$"
+      initial-balance: 1000
+      max-balance: 1000000 # set this to 0 to disable
+      min-transaction-amount: 0.01; # WARNING: this setting might require a few tweaks on other plugins' configs
+    custom:
+      gems:
+        id: "gem"
+        name-plural: "gems"
+        name-singular: "gem"
+        symbol: "*"
+        initial-balance: 0
+        max-balance: 0 # set this to 0 to disable
+        integer: true
+        min-transaction-amount: 0.01; # REQUIRES integer TO BE FALSE! WARNING: this setting might require a few tweaks on other plugins' config
+    # coins:
+    #   name: "coin"
+    #   name-plural: "coins"
+    #   symbol: "o"
+    #   initial-balance: 5
+    #   max-balance: 100
+    #   integer: true
+
 storage:
-  type: "mysql" # mysql (relational database) | yaml (file-based database) - not implemented | h2 - not implemented
-  yaml:
-    path: "userdata"
-    filename: "<UUID>.yml"
+  type: "mysql" # mysql (relational database) | h2 (in-memory database) - not implemented | yaml (file-based) - not implemented
   mysql:
     host: "localhost"
     port: "3306"
     database: "smpx"
     user: "root"
     password: ""
+  h2:
+    todo: ""
+  yaml:
+    path: "userdata"
+    filename: "%UUID%.yml"

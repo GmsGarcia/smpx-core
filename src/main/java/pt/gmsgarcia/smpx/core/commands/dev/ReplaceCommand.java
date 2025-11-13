@@ -4,50 +4,51 @@ import io.papermc.paper.command.brigadier.CommandSourceStack;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import pt.gmsgarcia.smpx.core.SmpxCore;
-import pt.gmsgarcia.smpx.core.commands.SmpxCommand;
+import pt.gmsgarcia.smpx.core.commands.ISmpxCommand;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class ReplaceCommand extends SmpxCommand {
+public class ReplaceCommand implements ISmpxCommand {
     public static final String NAME = "replace";
     public static final String DESCRIPTION = "Replace configurations";
     public static final String PERMISSION = "smpx.dev.replace";
 
-    public ReplaceCommand() {
-        super(NAME, PERMISSION);
-    }
+    public ReplaceCommand() {}
 
     @Override
     public void execute(CommandSourceStack source, String @NotNull [] args) {
         CommandSender sender = source.getSender();
 
-        if (sender.hasPermission(PERMISSION)) {
-            String module = "all";
+        if (!sender.hasPermission(PERMISSION)) {
+            sender.sendMessage(SmpxCore.messages().component("no-permission", false));
+            return;
+        }
 
-            if (args.length != 0) {
-                module = args[0];
-            }
+        String module = "all";
 
-            switch (module) {
-                case "all" -> {
-                    SmpxCore.config().replace();
-                    SmpxCore.messages().replace();
-                }
-                case "config" -> SmpxCore.config().replace();
-                case "messages" -> SmpxCore.messages().replace();
-                default -> {
-                    sender.sendMessage(SmpxCore.messages().component("invalid-module", true));
-                    return;
-                }
-            }
+        if (args.length != 0) {
+            module = args[0];
+        }
 
-            if (module.equals("all")) {
-                sender.sendMessage(SmpxCore.messages().component("replace-all-success", true ));
-            } else {
-                sender.sendMessage(SmpxCore.messages().component("replace-success", true, "module", module));
+        switch (module) {
+            case "all" -> {
+                SmpxCore.config().replace();
+                SmpxCore.messages().replace();
             }
+            case "config" -> SmpxCore.config().replace();
+            case "messages" -> SmpxCore.messages().replace();
+            default -> {
+                sender.sendMessage(SmpxCore.messages().component("invalid-module", true));
+                return;
+            }
+        }
+
+        if (module.equals("all")) {
+            sender.sendMessage(SmpxCore.messages().component("replace-all-success", true ));
+        } else {
+            sender.sendMessage(SmpxCore.messages().component("replace-success", true, "module", module));
         }
     }
 
