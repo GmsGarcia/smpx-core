@@ -85,18 +85,18 @@ public class HelpCommand implements ISmpxCommand {
     }
 
     private Component buildCommandMessage(Command command) {
-        Component msg = Component.empty();
-        msg = msg.append(SmpxCore.messages().component("help-title-topic", false, "topic", "/"+command.getName())).appendNewline();
-        msg = msg.append(SmpxCore.messages().component("help-command-description", false, "description", command.getDescription())).appendNewline();
-        msg = msg.append(SmpxCore.messages().component("help-command-usage", false, "usage", command.getUsage()));
+        Component msg = Component.empty()
+                .append(SmpxCore.messages().component("help-title-topic", false, "topic", "/"+command.getName())).appendNewline()
+                .append(SmpxCore.messages().component("help-command-description", false, "description", command.getDescription())).appendNewline()
+                .append(SmpxCore.messages().component("help-command-usage", false, "usage", command.getUsage()));
 
         return msg;
     }
 
     private Component buildNamespaceListMessage() {
-        Component msg = Component.empty();
-        msg = msg.append(SmpxCore.messages().component("help-title-default", false)).appendNewline();
-        msg = msg.append(SmpxCore.messages().component("help-tip", false)).appendNewline();
+        Component msg = Component.empty()
+                .append(SmpxCore.messages().component("help-title-default", false)).appendNewline()
+                .append(SmpxCore.messages().component("help-tip", false)).appendNewline();
 
         int i = 0;
         for (String namespace : CommandProvider.getNamespaces()) {

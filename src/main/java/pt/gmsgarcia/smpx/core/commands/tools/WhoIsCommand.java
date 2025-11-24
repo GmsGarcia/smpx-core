@@ -105,10 +105,15 @@ public class WhoIsCommand implements ISmpxCommand {
         );
 
         StringBuilder message = new StringBuilder(target.name() + (sender.hasPermission(ADMIN_PERMISSION) ? " : " + target.uuid() + "\n" : "\n"));
-        message.append("Last seen: ").append(lastSeen.format(DATE_TIME_FORMATTER)).append('\n');
+        message.append("Last seen: ")
+                .append(lastSeen.format(DATE_TIME_FORMATTER))
+                .append('\n');
 
         if (sender.hasPermission(ADMIN_PERMISSION)) {
-            message.append("Join date: ").append(joinDate.format(DATE_TIME_FORMATTER)).append('\n');
+            message.append("Join date: ")
+                    .append(joinDate.format(DATE_TIME_FORMATTER))
+                    .append('\n');
+
             if (target.previousNames() != null && !target.previousNames().isEmpty()) {
                 message.append("Usernames: \n");
 
@@ -117,14 +122,21 @@ public class WhoIsCommand implements ISmpxCommand {
                         ZoneId.systemDefault()
                 );
 
-                message.append(target.name()).append(" (since ").append(lastUsage.format(DATE_TIME_FORMATTER)).append(")").append('\n');
+                message.append(target.name())
+                        .append(" (since ")
+                        .append(lastUsage.format(DATE_TIME_FORMATTER))
+                        .append(")\n");
+
                 for (Username p : target.previousNames()) {
                     lastUsage = LocalDateTime.ofInstant(
                             Instant.ofEpochMilli(p.lastUsage()),
                             ZoneId.systemDefault()
                     );
 
-                    message.append(p.name()).append(" (last usage ").append(lastUsage.format(DATE_TIME_FORMATTER)).append(")").append('\n');
+                    message.append(p.name())
+                            .append(" (last usage ")
+                            .append(lastUsage.format(DATE_TIME_FORMATTER))
+                            .append(")\n");
                 }
             }
         }
