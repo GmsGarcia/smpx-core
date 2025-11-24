@@ -38,14 +38,12 @@ public class AccountDAO {
 
                     accounts.put(currency, new Account(uuid, name, currency, balance));
                 }
-
-                return accounts;
             }
         } catch (SQLException ex) {
             SmpxCore.logger().severe("AccountDao.loadAccounts error: " + ex.getMessage());
         }
 
-        return null;
+        return accounts;
     }
 
     public void create(UUID uuid, Map<String, Account> accounts) {
