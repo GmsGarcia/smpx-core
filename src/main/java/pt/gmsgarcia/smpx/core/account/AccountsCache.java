@@ -13,6 +13,7 @@ import pt.gmsgarcia.smpx.core.config.CurrencyConfig;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -23,7 +24,7 @@ import java.util.concurrent.TimeUnit;
  * user is online. This is perfectly fine since they only hold *references*.
  */
 public class AccountsCache {
-    private final Map<UUID, HashMap<String, Account>> online = new HashMap<>();
+    private final Map<UUID, HashMap<String, Account>> online = new ConcurrentHashMap<>();
 
     private final LoadingCache<UUID, HashMap<String, Account>> cache = CacheBuilder.newBuilder()
             .expireAfterAccess(10, TimeUnit.MINUTES)
