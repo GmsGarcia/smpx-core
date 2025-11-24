@@ -84,7 +84,7 @@ public class BanCommand implements ISmpxCommand {
             if (args.length == 1) {
                 return Bukkit.getOnlinePlayers().stream()
                     .map(Player::getName)
-                    .filter(name -> name.toLowerCase().startsWith(args[args.length - 1].toLowerCase()))
+                    .filter(name -> name.toLowerCase(Locale.ROOT).startsWith(args[args.length - 1].toLowerCase(Locale.ROOT)))
                     .toList();
             }
         }

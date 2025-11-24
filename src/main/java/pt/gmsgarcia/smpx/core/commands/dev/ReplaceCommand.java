@@ -9,6 +9,7 @@ import pt.gmsgarcia.smpx.core.commands.ISmpxCommand;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Locale;
 
 public class ReplaceCommand implements ISmpxCommand {
     public static final String NAME = "replace";
@@ -63,7 +64,7 @@ public class ReplaceCommand implements ISmpxCommand {
             }
 
             if (args.length == 1) {
-                return modules.stream().filter(name -> name.toLowerCase().startsWith(args[args.length - 1].toLowerCase())).toList();
+                return modules.stream().filter(name -> name.toLowerCase(Locale.ROOT).startsWith(args[args.length - 1].toLowerCase(Locale.ROOT))).toList();
             }
         }
 

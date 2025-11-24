@@ -1,5 +1,4 @@
 package pt.gmsgarcia.smpx.core.commands.dev;
-
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
@@ -9,6 +8,7 @@ import pt.gmsgarcia.smpx.core.commands.ISmpxCommand;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Locale;
 
 public class ReloadCommand implements ISmpxCommand {
     public static final String NAME = "reload";
@@ -63,7 +63,7 @@ public class ReloadCommand implements ISmpxCommand {
             }
 
             if (args.length == 1) {
-                return modules.stream().filter(name -> name.toLowerCase().startsWith(args[args.length - 1].toLowerCase())).toList();
+                return modules.stream().filter(name -> name.toLowerCase(Locale.ROOT).startsWith(args[args.length - 1].toLowerCase(Locale.ROOT))).toList();
             }
         }
 

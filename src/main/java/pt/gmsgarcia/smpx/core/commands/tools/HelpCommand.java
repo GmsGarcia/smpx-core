@@ -12,6 +12,7 @@ import pt.gmsgarcia.smpx.core.commands.ISmpxCommand;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Locale;
 import java.util.Map;
 
 public class HelpCommand implements ISmpxCommand {
@@ -74,7 +75,7 @@ public class HelpCommand implements ISmpxCommand {
         // return suggestions while typing
         if (args.length == 1) {
             return commandsMap.keySet().stream()
-                    .filter(k -> k.toLowerCase().startsWith(args[0].toLowerCase()))
+                    .filter(k -> k.toLowerCase(Locale.ROOT).startsWith(args[0].toLowerCase(Locale.ROOT)))
                     .toList();
         }
 

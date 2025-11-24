@@ -14,6 +14,7 @@ import pt.gmsgarcia.smpx.core.user.User;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Locale;
 import java.util.UUID;
 
 public class PayCommand implements ISmpxCommand {
@@ -125,7 +126,7 @@ public class PayCommand implements ISmpxCommand {
                 return Bukkit.getOnlinePlayers().stream()
                         .map(Player::getName)
                         .filter(name -> !name.equals(sender.getName()))
-                        .filter(name -> name.toLowerCase().startsWith(args[args.length - 1].toLowerCase()))
+                        .filter(name -> name.toLowerCase(Locale.ROOT).startsWith(args[args.length - 1].toLowerCase(Locale.ROOT)))
                         .toList();
             }
         }

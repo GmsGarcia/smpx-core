@@ -18,6 +18,7 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Locale;
 import java.util.UUID;
 
 public class WhoIsCommand implements ISmpxCommand {
@@ -82,7 +83,7 @@ public class WhoIsCommand implements ISmpxCommand {
             if (args.length == 1) {
                 return Bukkit.getOnlinePlayers().stream()
                     .map(Player::getName)
-                    .filter(name -> name.toLowerCase().startsWith(args[args.length - 1].toLowerCase()))
+                    .filter(name -> name.toLowerCase(Locale.ROOT).startsWith(args[args.length - 1].toLowerCase(Locale.ROOT)))
                     .toList();
             }
         }

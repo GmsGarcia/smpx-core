@@ -11,10 +11,7 @@ import pt.gmsgarcia.smpx.core.SmpxCore;
 import pt.gmsgarcia.smpx.core.commands.ISmpxCommand;
 import pt.gmsgarcia.smpx.core.user.User;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class BanIpCommand implements ISmpxCommand {
@@ -86,7 +83,7 @@ public class BanIpCommand implements ISmpxCommand {
             if (args.length == 1) {
                 return Bukkit.getOnlinePlayers().stream()
                     .map(Player::getName)
-                    .filter(name -> name.toLowerCase().startsWith(args[args.length - 1].toLowerCase()))
+                    .filter(name -> name.toLowerCase(Locale.ROOT).startsWith(args[args.length - 1].toLowerCase(Locale.ROOT)))
                     .toList();
             }
         }
