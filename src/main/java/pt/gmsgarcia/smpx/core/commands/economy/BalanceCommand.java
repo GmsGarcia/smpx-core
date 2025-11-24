@@ -13,6 +13,7 @@ import pt.gmsgarcia.smpx.core.user.User;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Locale;
 
 public class BalanceCommand implements ISmpxCommand {
     public static final String NAME = "balance";
