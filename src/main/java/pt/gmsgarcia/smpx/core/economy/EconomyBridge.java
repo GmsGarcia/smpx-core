@@ -56,7 +56,7 @@ public class EconomyBridge {
     @SuppressWarnings("deprecation")
     public net.milkbowl.vault.economy.EconomyResponse withdrawAccount(UUID uuid, double amount) {
         HashMap<String, Account> accounts = SmpxCore.accounts().get(uuid);
-        if (accounts == null) {
+        if (accounts == null || accounts.isEmpty()) {
             return new net.milkbowl.vault.economy.EconomyResponse(amount, 0, net.milkbowl.vault.economy.EconomyResponse.ResponseType.FAILURE, "Accounts do not exist.");
         }
 
@@ -79,7 +79,7 @@ public class EconomyBridge {
 
     public EconomyResponse withdrawAccountUnlocked(UUID uuid, String currency, BigDecimal amount) {
         HashMap<String, Account> accounts = SmpxCore.accounts().get(uuid);
-        if (accounts == null) {
+        if (accounts == null || accounts.isEmpty()) {
             return new EconomyResponse(amount, BigDecimal.ZERO, EconomyResponse.ResponseType.FAILURE, "Accounts do not exist.");
         }
 
@@ -99,7 +99,7 @@ public class EconomyBridge {
     @SuppressWarnings("deprecation")
     public net.milkbowl.vault.economy.EconomyResponse depositAccount(UUID uuid, double amount) {
         HashMap<String, Account> accounts = SmpxCore.accounts().get(uuid);
-        if (accounts == null) {
+        if (accounts == null || accounts.isEmpty()) {
             return new net.milkbowl.vault.economy.EconomyResponse(amount, 0, net.milkbowl.vault.economy.EconomyResponse.ResponseType.FAILURE, "Accounts dos not exist.");
         }
 
@@ -118,7 +118,7 @@ public class EconomyBridge {
 
     public EconomyResponse depositAccountUnlocked(UUID uuid, String currency, BigDecimal amount) {
         HashMap<String, Account> accounts = SmpxCore.accounts().get(uuid);
-        if (accounts == null) {
+        if (accounts == null || accounts.isEmpty()) {
             return new EconomyResponse(amount, BigDecimal.ZERO, EconomyResponse.ResponseType.FAILURE, "Accounts dos not exist.");
         }
 
@@ -145,7 +145,7 @@ public class EconomyBridge {
      */
     public boolean createAccount(UUID uuid, String name, String currency) {
         HashMap<String, Account> accounts = SmpxCore.accounts().get(uuid);
-        if (accounts != null) {
+        if (accounts != null && !accounts.isEmpty()) {
             return false;
         }
 
@@ -160,9 +160,9 @@ public class EconomyBridge {
 
     public boolean hasAccount(UUID uuid, String currency) {
         HashMap<String, Account> accounts = SmpxCore.accounts().get(uuid);
-        if (accounts == null) return false;
+        if (accounts == null || accounts.isEmpty()) return false;
 
-        Account acc = SmpxCore.accounts().get(uuid).get(currency);
+        Account acc = accounts.get(currency);
         return acc != null;
     }
 
@@ -172,9 +172,9 @@ public class EconomyBridge {
 
     public BigDecimal getBalance(UUID uuid, String currency) {
         HashMap<String, Account> accounts = SmpxCore.accounts().get(uuid);
-        if (accounts == null) return BigDecimal.ZERO;
+        if (accounts == null || accounts.isEmpty()) return BigDecimal.ZERO;
 
-        Account acc = SmpxCore.accounts().get(uuid).get(currency);
+        Account acc = accounts.get(currency);
         if (acc == null) {
             return BigDecimal.ZERO;
         }
@@ -188,9 +188,9 @@ public class EconomyBridge {
 
     public boolean has(UUID uuid, String currency, double amount) {
         HashMap<String, Account> accounts = SmpxCore.accounts().get(uuid);
-        if (accounts == null) return false;
+        if (accounts == null || accounts.isEmpty()) return false;
 
-        Account acc = SmpxCore.accounts().get(uuid).get(currency);
+        Account acc = accounts.get(currency);
         if (acc == null) {
             return false;
         }
@@ -200,11 +200,11 @@ public class EconomyBridge {
 
     public Optional<String> getAccountName(UUID uuid) {
         HashMap<String, Account> accounts = SmpxCore.accounts().get(uuid);
-        if (accounts == null) {
+        if (accounts == null || accounts.isEmpty()) {
             return Optional.empty();
         }
 
-        Account acc = SmpxCore.accounts().get(uuid).get("default");
+        Account acc = accounts.get("default");
         return Optional.of(acc.name());
     }
 }

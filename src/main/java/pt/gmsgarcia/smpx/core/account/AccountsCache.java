@@ -145,7 +145,7 @@ public class AccountsCache {
         }
 
         HashMap<String, Account> accounts = this.get(uuid);
-        if (accounts != null) {
+        if (accounts != null && !accounts.isEmpty()) {
             SmpxCore.storage().layer().saveAccounts(uuid, accounts);
         }
     }

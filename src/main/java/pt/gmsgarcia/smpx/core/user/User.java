@@ -39,7 +39,7 @@ public class User {
         HashMap<String, Account> accounts = SmpxCore.accounts().get(uuid);
 
         // create accounts if not found...
-        if (accounts == null) {
+        if (accounts == null || accounts.isEmpty()) {
             this.accounts = new HashMap<>();
 
             for (Map.Entry<String, CurrencyConfig> currency : SmpxCore.config().economy().currencies().entrySet()) {

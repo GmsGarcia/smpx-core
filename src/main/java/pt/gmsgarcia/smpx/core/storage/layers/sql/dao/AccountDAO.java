@@ -28,7 +28,7 @@ public class AccountDAO {
             ps.setString(1, uuid.toString());
             try (ResultSet rs = ps.executeQuery()) {
                 if (!rs.isBeforeFirst()) {
-                    return null;
+                    return accounts;
                 }
 
                 while (rs.next()) {
