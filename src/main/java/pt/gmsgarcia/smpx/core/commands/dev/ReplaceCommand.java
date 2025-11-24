@@ -46,7 +46,7 @@ public class ReplaceCommand implements ISmpxCommand {
             }
         }
 
-        if (module.equals("all")) {
+        if ("all".equals(module)) {
             sender.sendMessage(SmpxCore.messages().component("replace-all-success", true ));
         } else {
             sender.sendMessage(SmpxCore.messages().component("replace-success", true, "module", module));

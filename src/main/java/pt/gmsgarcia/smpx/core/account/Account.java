@@ -65,7 +65,7 @@ public class Account {
 
         // check if the newBalance is valid (positive)
         if (newBalance.compareTo(BigDecimal.ZERO) < 0) {
-            if (!this.currency.equals("default")) return false;
+            if (!"default".equals(this.currency)) return false;
 
             if (!econ.allowDebt()) return false;
 

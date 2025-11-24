@@ -45,7 +45,7 @@ public class ReloadCommand implements ISmpxCommand {
             }
         }
 
-        if (module.equals("all")) {
+        if ("all".equals(module)) {
             sender.sendMessage(SmpxCore.messages().component("reload-all-success", true ));
         } else {
             sender.sendMessage(SmpxCore.messages().component("reload-success", true, "module", module));
