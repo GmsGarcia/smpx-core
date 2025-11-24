@@ -4,6 +4,7 @@ messages:
   no-permission: "<red>You do not have permission to do that! :c"
   generic-error: "<red>An error has occurred. Please report this to an administrator."
   player-not-found: "<red>Player not found: %player%"
+  player-offline: "<red>Player is offline: %player%"
   invalid-arguments-count: "<red>Invalid number of arguments."
   invalid-player-argument: "<red>You must specify a player."
   invalid-sender: "<red>You must be a valid player."

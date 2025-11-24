@@ -98,6 +98,15 @@ public class UsersCache {
     }
 
     /**
+     * Returns the user with the specified username. If no value is
+     * found returns {@code null}.
+     * Mostly used to get {@link User} objects via username for online players.
+     */
+    public User get(String name) {
+        return this.get(Bukkit.getPlayerUniqueId(name));
+    }
+
+    /**
      * Returns the user with the specified {@link UUID}. If no value is
      * found returns {@code null}.
      */

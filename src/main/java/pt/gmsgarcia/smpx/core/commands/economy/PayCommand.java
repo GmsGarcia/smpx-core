@@ -63,26 +63,30 @@ public class PayCommand implements ISmpxCommand {
         UUID senderUUID = ((Player) sender).getPlayer().getUniqueId();
         UUID receiverUUID = receiverOfflinePlayer.getUniqueId();
 
-        User senderUser = getUser(senderUUID);
+        User senderUser = SmpxCore.users().get(senderUUID);
         if (senderUser == null) {
+            // sender is online but no User object was found... o-o
             sender.sendMessage(SmpxCore.messages().component("generic-error", true));
             return;
         }
 
         Account senderAccount = senderUser.account();
         if (senderAccount == null) {
+            // sender exists but no Account objects were found... o-o
             sender.sendMessage(SmpxCore.messages().component("generic-error", true));
             return;
         }
 
-        User receiverUser = getUser(receiverUUID);
+        User receiverUser = SmpxCore.users().get(receiverUUID);
         if (receiverUser == null) {
+            // receiver has played before (or is online for the first time) but no User object was found... o-o
             sender.sendMessage(SmpxCore.messages().component("generic-error", true));
             return;
         }
 
         Account receiverAccount = receiverUser.account();
         if (receiverAccount == null) {
+            // receiver exists but no Account objects were found... o-o
             sender.sendMessage(SmpxCore.messages().component("generic-error", true));
             return;
         }

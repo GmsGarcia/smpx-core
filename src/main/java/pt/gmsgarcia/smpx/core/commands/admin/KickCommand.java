@@ -32,9 +32,10 @@ public class KickCommand implements ISmpxCommand {
                 return;
             }
 
-            User target = getUser(args[0]);
+            String targetName = args[0];
+            User target = SmpxCore.users().get(targetName);
             if (target == null) {
-                sender.sendMessage(SmpxCore.messages().component("generic-error", true));
+                sender.sendMessage(SmpxCore.messages().component("player-not-found", true));
                 return;
             }
 
@@ -44,8 +45,9 @@ public class KickCommand implements ISmpxCommand {
                         .collect(Collectors.joining(" "));
             }
 
-            if (target.player().isOnline()) {
-                target.player().kick(Component.text(reason));
+            if (!target.isOnline()) {
+                sender.sendMessage(SmpxCore.messages().component("player-offline", true, "target", target.name()));
+                return;
             }
 
             sender.sendMessage(SmpxCore.messages().component("kick", true, "target", target.name(), "reason", reason));

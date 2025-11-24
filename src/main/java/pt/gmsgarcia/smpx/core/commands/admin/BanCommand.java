@@ -5,6 +5,7 @@ import io.papermc.paper.ban.BanListType;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -12,10 +13,7 @@ import pt.gmsgarcia.smpx.core.SmpxCore;
 import pt.gmsgarcia.smpx.core.commands.ISmpxCommand;
 import pt.gmsgarcia.smpx.core.user.User;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class BanCommand implements ISmpxCommand {
@@ -35,8 +33,10 @@ public class BanCommand implements ISmpxCommand {
                 return;
             }
 
-            User target = getUser(args[0]);
+            String targetName = args[0];
+            User target = SmpxCore.users().get(targetName);
             if (target == null) {
+                sender.sendMessage(SmpxCore.messages().component("player-not-found", true));
                 sender.sendMessage(SmpxCore.messages().component("generic-error", true));
                 return;
             }
@@ -52,8 +52,8 @@ public class BanCommand implements ISmpxCommand {
                         .collect(Collectors.joining(" "));
             }
 
-            if (target.player().isOnline()) {
-                target.player().kick(Component.text(reason));
+            if (target.isOnline()) {
+                target.player().getPlayer().kick(Component.text(reason));
             }
 
             Date expireDate = null;

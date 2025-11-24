@@ -58,14 +58,14 @@ public class WhoIsCommand implements ISmpxCommand {
         }
 
         UUID uuid = targetOfflinePlayer.getUniqueId();
-
-        User user = getUser(uuid);
-        if (user == null) {
-            sender.sendMessage(SmpxCore.messages().component("generic-error", true));
+        User target = SmpxCore.users().get(uuid);
+        if (target == null) {
+            // target has played before (or is online for the first time) but no User object was found... o-o
+            sender.sendMessage(SmpxCore.messages().component("player-not-found", true));
             return;
         }
 
-        sender.sendMessage(buildMessage(sender, user));
+        sender.sendMessage(buildMessage(sender, target));
     }
 
     @Override

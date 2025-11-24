@@ -1,6 +1,7 @@
 package pt.gmsgarcia.smpx.core.user;
 
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import pt.gmsgarcia.smpx.core.SmpxCore;
 import pt.gmsgarcia.smpx.core.account.Account;
@@ -17,7 +18,7 @@ import java.util.UUID;
  * name, balance, joinDate, lastSeen, and previousNames.
  */
 public class User {
-    private final Player player;
+    private final OfflinePlayer player;
     private final UUID uuid;
     private String name;
     private final long joinDate;
@@ -50,8 +51,7 @@ public class User {
             this.accounts = accounts;
         }
 
-        // TODO: this might return null if the player is offline...
-        this.player = Bukkit.getPlayer(uuid);
+        this.player = Bukkit.getOfflinePlayer(uuid);
     }
 
     /**
@@ -73,10 +73,17 @@ public class User {
     }
 
     /**
-     * Returns the user {@link Player} object.
+     * Returns the user {@link OfflinePlayer} object.
      */
-    public Player player() {
+    public OfflinePlayer player() {
         return this.player;
+    }
+
+    /**
+     * Checks if this player is online.
+     */
+    public boolean isOnline() {
+        return this.player.isOnline();
     }
 
     /**

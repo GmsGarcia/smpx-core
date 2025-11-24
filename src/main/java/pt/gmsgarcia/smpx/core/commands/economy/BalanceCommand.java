@@ -45,14 +45,16 @@ public class BalanceCommand implements ISmpxCommand {
             }
         }
 
-        User target = getUser(targetName);
+        User target = SmpxCore.users().get(targetName);
         if (target == null) {
+            // target has played before (or is online) but no User object was found... o-o
             sender.sendMessage(SmpxCore.messages().component("generic-error", true));
             return;
         }
 
         Account account = target.account();
         if (account == null) {
+            // target exists but no Account objects were found... o-o
             sender.sendMessage(SmpxCore.messages().component("generic-error", true));
             return;
         }

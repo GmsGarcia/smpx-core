@@ -34,9 +34,10 @@ public class BanIpCommand implements ISmpxCommand {
                 return;
             }
 
-            User target = getUser(args[0]);
+            String targetName = args[0];
+            User target = SmpxCore.users().get(targetName);
             if (target == null) {
-                sender.sendMessage(SmpxCore.messages().component("generic-error", true));
+                sender.sendMessage(SmpxCore.messages().component("player-not-found", true));
                 return;
             }
 
@@ -51,16 +52,19 @@ public class BanIpCommand implements ISmpxCommand {
                         .collect(Collectors.joining(" "));
             }
 
-            if (target.player().isOnline()) {
-                target.player().kick(Component.text(reason));
+            if (!target.isOnline()) {
+                sender.sendMessage(SmpxCore.messages().component("player-offline", true, "target", target.name()));
+                return;
             }
+
+            target.player().getPlayer().kick(Component.text(reason));
 
             Date expireDate = null;
             if (duration > 0) {
                 expireDate = new Date(System.currentTimeMillis() + (duration * 60L * 60L * 1000L));
             }
 
-            SmpxCore.instance().getServer().getBanList(BanListType.IP).addBan(target.player().getAddress().getHostName(), reason, expireDate, sender.getName());
+            SmpxCore.instance().getServer().getBanList(BanListType.IP).addBan(target.player().getPlayer().getAddress().getHostName(), reason, expireDate, sender.getName());
 
             if (expireDate == null) {
                 sender.sendMessage(SmpxCore.messages().component("ban-perm", true, "target", target.name(), "reason", reason));
