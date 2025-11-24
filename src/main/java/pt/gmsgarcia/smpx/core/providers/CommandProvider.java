@@ -1,4 +1,4 @@
-package pt.gmsgarcia.smpx.core.commands;
+package pt.gmsgarcia.smpx.core.providers;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.PluginCommand;
@@ -11,12 +11,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class CommandsProvider {
+public class CommandProvider {
     private static Map<String, Command> commands;
     private static List<String> namespaces;
     private static Map<String, Map<String, Command>> commandsByNamespace;
 
-    private CommandsProvider() {}
+    private CommandProvider() {}
 
     public static void updateCommands() {
         commands = new HashMap<>();

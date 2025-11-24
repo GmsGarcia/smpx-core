@@ -1,4 +1,4 @@
-package pt.gmsgarcia.smpx.core.logger;
+package pt.gmsgarcia.smpx.core;
 
 import java.util.logging.Logger;
 

@@ -7,7 +7,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import pt.gmsgarcia.smpx.core.SmpxCore;
-import pt.gmsgarcia.smpx.core.commands.CommandsProvider;
+import pt.gmsgarcia.smpx.core.providers.CommandProvider;
 import pt.gmsgarcia.smpx.core.commands.ISmpxCommand;
 
 import java.util.ArrayList;
@@ -39,7 +39,7 @@ public class HelpCommand implements ISmpxCommand {
         }
 
         // display command list filtered by namespace
-        String matchedNamespace = CommandsProvider.getCommandsByNamespace().keySet().stream()
+        String matchedNamespace = CommandProvider.getCommandsByNamespace().keySet().stream()
             .filter(k -> k.equalsIgnoreCase(args[0]))
             .findFirst()
             .orElse(null);
@@ -49,12 +49,12 @@ public class HelpCommand implements ISmpxCommand {
         }
 
         // display command details
-        String matchedCommand = CommandsProvider.getCommands().keySet().stream()
+        String matchedCommand = CommandProvider.getCommands().keySet().stream()
             .filter(k -> k.equalsIgnoreCase(args[0]))
             .findFirst()
             .orElse(null);
         if (matchedCommand != null) {
-            Command command = CommandsProvider.getCommands().get(matchedCommand);
+            Command command = CommandProvider.getCommands().get(matchedCommand);
             sender.sendMessage(buildCommandMessage(command));
             return;
         }
@@ -65,11 +65,11 @@ public class HelpCommand implements ISmpxCommand {
 
     @Override
     public @NotNull Collection<String> suggest(@NotNull CommandSourceStack source, String @NotNull [] args) {
-        Map<String, Map<String, Command>> commandsMap = CommandsProvider.getCommandsByNamespace();
+        Map<String, Map<String, Command>> commandsMap = CommandProvider.getCommandsByNamespace();
 
         // return initial suggestions
         if (args.length < 1) {
-            return CommandsProvider.getCommands().keySet().stream()
+            return CommandProvider.getCommands().keySet().stream()
                     .filter(s -> !s.contains(":")) // remove namespace commands
                     .toList();
         }
@@ -99,11 +99,11 @@ public class HelpCommand implements ISmpxCommand {
         msg = msg.append(SmpxCore.messages().component("help-tip", false)).appendNewline();
 
         int i = 0;
-        for (String namespace : CommandsProvider.getNamespaces()) {
+        for (String namespace : CommandProvider.getNamespaces()) {
             msg = msg.append(SmpxCore.messages().component("help-list-default", false, "topic", namespace));
             i++;
 
-            if (i < CommandsProvider.getNamespaces().size()) {
+            if (i < CommandProvider.getNamespaces().size()) {
                 msg = msg.appendNewline();
             }
         }
@@ -114,7 +114,7 @@ public class HelpCommand implements ISmpxCommand {
     private Component buildCommandListMessage(String namespace) {
         Component msg = Component.empty();
         Map<String, Command> commands;
-        commands = namespace.isEmpty() ? CommandsProvider.getCommands() : CommandsProvider.getCommandsByNamespace().get(namespace);
+        commands = namespace.isEmpty() ? CommandProvider.getCommands() : CommandProvider.getCommandsByNamespace().get(namespace);
 
         if (!namespace.isEmpty()) {
             msg = msg.append(SmpxCore.messages().component("help-title-topic", false, "topic", namespace)).appendNewline();

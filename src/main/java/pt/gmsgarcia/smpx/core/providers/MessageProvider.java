@@ -1,4 +1,4 @@
-package pt.gmsgarcia.smpx.core.messages;
+package pt.gmsgarcia.smpx.core.providers;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -7,10 +7,10 @@ import pt.gmsgarcia.smpx.core.SmpxCore;
 
 import java.io.File;
 
-public class MessageManager {
+public class MessageProvider {
     private YamlConfiguration messages;
 
-    public MessageManager() {}
+    public MessageProvider() {}
 
     public void load() {
         File file = new File(SmpxCore.instance().getDataFolder(), "messages.yml");

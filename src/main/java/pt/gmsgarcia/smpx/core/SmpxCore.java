@@ -2,8 +2,6 @@ package pt.gmsgarcia.smpx.core;
 
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import pt.gmsgarcia.smpx.core.account.AccountsCache;
 import pt.gmsgarcia.smpx.core.commands.CommandRegister;
 import pt.gmsgarcia.smpx.core.config.SmpxConfig;
@@ -11,15 +9,14 @@ import pt.gmsgarcia.smpx.core.economy.EconomyBridge;
 import pt.gmsgarcia.smpx.core.economy.vault.VaultEconomyProvider;
 import pt.gmsgarcia.smpx.core.economy.vault.VaultUnlockedEconomyProvider;
 import pt.gmsgarcia.smpx.core.listeners.SmpxListeners;
-import pt.gmsgarcia.smpx.core.logger.SmpxLogger;
-import pt.gmsgarcia.smpx.core.messages.MessageManager;
+import pt.gmsgarcia.smpx.core.providers.MessageProvider;
 import pt.gmsgarcia.smpx.core.storage.StorageManager;
 import pt.gmsgarcia.smpx.core.user.UsersCache;
 
 public final class SmpxCore extends JavaPlugin {
     private static SmpxLogger logger;
     private static SmpxConfig config;
-    private static MessageManager messages;
+    private static MessageProvider messages;
     private static StorageManager storage;
     private static EconomyBridge economy;
     private static UsersCache users;
@@ -35,7 +32,7 @@ public final class SmpxCore extends JavaPlugin {
         config = new SmpxConfig();
         config.load();
 
-        messages = new MessageManager();
+        messages = new MessageProvider();
         messages.load();
 
         storage = new StorageManager();
@@ -96,7 +93,7 @@ public final class SmpxCore extends JavaPlugin {
         return config;
     }
 
-    public static MessageManager messages() {
+    public static MessageProvider messages() {
         return messages;
     }
 
