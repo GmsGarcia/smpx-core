@@ -1,7 +1,6 @@
 package pt.gmsgarcia.smpx.core.commands.admin;
 
 import io.papermc.paper.command.brigadier.CommandSourceStack;
-import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;

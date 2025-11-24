@@ -7,8 +7,8 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import pt.gmsgarcia.smpx.core.SmpxCore;
-import pt.gmsgarcia.smpx.core.providers.CommandProvider;
 import pt.gmsgarcia.smpx.core.commands.ISmpxCommand;
+import pt.gmsgarcia.smpx.core.providers.CommandProvider;
 
 import java.util.ArrayList;
 import java.util.Collection;

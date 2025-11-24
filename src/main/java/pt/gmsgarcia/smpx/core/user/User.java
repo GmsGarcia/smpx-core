@@ -2,7 +2,6 @@ package pt.gmsgarcia.smpx.core.user;
 
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.Player;
 import pt.gmsgarcia.smpx.core.SmpxCore;
 import pt.gmsgarcia.smpx.core.account.Account;
 import pt.gmsgarcia.smpx.core.config.CurrencyConfig;
