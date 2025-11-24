@@ -20,6 +20,8 @@ public class HelpCommand implements ISmpxCommand {
     public static final String DESCRIPTION = "Get a commands's info";
     private static final String PERMISSION = "smpx.tools.help";
 
+    private static final int MAX_LINE_SIZE = 60;
+
     public HelpCommand() {}
 
     @Override
@@ -133,8 +135,8 @@ public class HelpCommand implements ISmpxCommand {
             Component line = SmpxCore.messages().component("help-list-command", false, "command", command.getKey(), "description", command.getValue().getDescription());
 
             String plain = PlainTextComponentSerializer.plainText().serialize(line);
-            if (plain.length() > 60) {
-                String wrapped = command.getValue().getDescription().substring(0, command.getValue().getDescription().length() - (plain.length()-57)) + "...";
+            if (plain.length() > MAX_LINE_SIZE) {
+                String wrapped = command.getValue().getDescription().substring(0, command.getValue().getDescription().length() - (plain.length()-(MAX_LINE_SIZE+3))) + "...";
                 line = SmpxCore.messages().component("help-list-command", false, "command", command.getKey(), "description", wrapped);
             }
 
