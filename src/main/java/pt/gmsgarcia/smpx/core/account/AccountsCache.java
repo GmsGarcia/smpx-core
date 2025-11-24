@@ -104,7 +104,7 @@ public class AccountsCache {
         try {
             return cache.getUnchecked(uuid);
         } catch (Exception e) {
-            return null;
+            return new HashMap<>(); // return empty...
         }
     }
 
