@@ -8,7 +8,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import pt.gmsgarcia.smpx.core.SmpxCore;
 import pt.gmsgarcia.smpx.core.account.Account;
-import pt.gmsgarcia.smpx.core.commands.ISmpxCommand;
+import pt.gmsgarcia.smpx.core.commands.SmpxCommand;
 import pt.gmsgarcia.smpx.core.user.User;
 
 import java.math.BigDecimal;
@@ -16,21 +16,19 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Locale;
 
-public class SetBalanceCommand implements ISmpxCommand {
+public class SetBalanceCommand extends SmpxCommand {
     public static final String NAME = "setbalance";
     public static final String DESCRIPTION = "Set a player's balance";
     private static final String PERMISSION = "smpx.economy.setbalance";
 
-    public SetBalanceCommand() {}
+    public SetBalanceCommand() {
+        super(NAME, DESCRIPTION);
+    }
 
     @Override
     public void execute(@NotNull CommandSourceStack source, String @NotNull [] args) {
         CommandSender sender = source.getSender();
-
-        if (!sender.hasPermission(PERMISSION)) {
-            sender.sendMessage(SmpxCore.messages().component("no-permission", false));
-            return;
-        }
+        if (!hasPermission(sender, PERMISSION)) return;
 
         String targetName = sender.getName();
         BigDecimal amount;
@@ -84,22 +82,6 @@ public class SetBalanceCommand implements ISmpxCommand {
     @Override
     public @NotNull Collection<String> suggest(@NotNull CommandSourceStack source, String @NotNull [] args) {
         CommandSender sender = source.getSender();
-
-        if (sender.hasPermission(PERMISSION)) {
-            if (args.length == 0) {
-                return Bukkit.getOnlinePlayers().stream()
-                        .map(Player::getName)
-                        .toList();
-            }
-
-            if (args.length == 1) {
-                return Bukkit.getOnlinePlayers().stream()
-                        .map(Player::getName)
-                        .filter(name -> name.toLowerCase(Locale.ROOT).startsWith(args[args.length - 1].toLowerCase(Locale.ROOT)))
-                        .toList();
-            }
-        }
-
-        return new ArrayList<>();
+        return suggestPlayerNames(sender, PERMISSION, args, args.length-1); // TODO: is this the correct position?
     }
 }

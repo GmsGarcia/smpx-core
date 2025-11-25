@@ -7,7 +7,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import pt.gmsgarcia.smpx.core.SmpxCore;
-import pt.gmsgarcia.smpx.core.commands.ISmpxCommand;
+import pt.gmsgarcia.smpx.core.commands.SmpxCommand;
 import pt.gmsgarcia.smpx.core.providers.CommandProvider;
 
 import java.util.ArrayList;
@@ -15,23 +15,21 @@ import java.util.Collection;
 import java.util.Locale;
 import java.util.Map;
 
-public class HelpCommand implements ISmpxCommand {
+public class HelpCommand extends SmpxCommand {
     public static final String NAME = "help";
     public static final String DESCRIPTION = "Get a commands's info";
     private static final String PERMISSION = "smpx.tools.help";
 
     private static final int MAX_LINE_SIZE = 60;
 
-    public HelpCommand() {}
+    public HelpCommand() {
+        super(NAME, DESCRIPTION);
+    }
 
     @Override
     public void execute(CommandSourceStack source, String @NotNull [] args) {
         CommandSender sender = source.getSender();
-
-        if (!sender.hasPermission(PERMISSION)) {
-            sender.sendMessage(SmpxCore.messages().component("no-permission", false));
-            return;
-        }
+        if (!hasPermission(sender, PERMISSION)) return;
 
         if (args.length == 0) {
             sender.sendMessage(buildNamespaceListMessage());

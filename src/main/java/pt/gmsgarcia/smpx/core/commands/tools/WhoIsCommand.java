@@ -8,7 +8,7 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import pt.gmsgarcia.smpx.core.SmpxCore;
-import pt.gmsgarcia.smpx.core.commands.ISmpxCommand;
+import pt.gmsgarcia.smpx.core.commands.SmpxCommand;
 import pt.gmsgarcia.smpx.core.user.User;
 import pt.gmsgarcia.smpx.core.user.Username;
 
@@ -21,7 +21,7 @@ import java.util.Collection;
 import java.util.Locale;
 import java.util.UUID;
 
-public class WhoIsCommand implements ISmpxCommand {
+public class WhoIsCommand extends SmpxCommand {
     public static final String NAME = "whois";
     public static final String DESCRIPTION = "Get a player's info";
     private static final String DEFAULT_PERMISSION = "smpx.tools.whois";
@@ -29,16 +29,14 @@ public class WhoIsCommand implements ISmpxCommand {
 
     private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
-    public WhoIsCommand() {}
+    public WhoIsCommand() {
+       super(NAME, DESCRIPTION);
+    }
 
     @Override
     public void execute(CommandSourceStack source, String @NotNull [] args) {
         CommandSender sender = source.getSender();
-
-        if (!sender.hasPermission(DEFAULT_PERMISSION)) {
-            sender.sendMessage(SmpxCore.messages().component("no-permission", false));
-            return;
-        }
+        if (!hasPermission(sender, DEFAULT_PERMISSION)) return;
 
         if (args.length == 0 && source.getSender() instanceof ConsoleCommandSender) {
             sender.sendMessage(SmpxCore.messages().component("invalid-sender", true));
@@ -72,23 +70,7 @@ public class WhoIsCommand implements ISmpxCommand {
     @Override
     public @NotNull Collection<String> suggest(CommandSourceStack source, String @NotNull [] args) {
         CommandSender sender = source.getSender();
-
-        if (sender.hasPermission(ADMIN_PERMISSION)) {
-            if (args.length == 0) {
-                return Bukkit.getOnlinePlayers().stream()
-                        .map(Player::getName)
-                        .toList();
-            }
-
-            if (args.length == 1) {
-                return Bukkit.getOnlinePlayers().stream()
-                    .map(Player::getName)
-                    .filter(name -> name.toLowerCase(Locale.ROOT).startsWith(args[args.length - 1].toLowerCase(Locale.ROOT)))
-                    .toList();
-            }
-        }
-
-        return new ArrayList<>();
+        return suggestPlayerNames(sender, ADMIN_PERMISSION, args, args.length-1); // TODO: is this the correct position?
     }
 
     private static String buildMessage(CommandSender sender, User target) {

@@ -8,29 +8,27 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import pt.gmsgarcia.smpx.core.SmpxCore;
 import pt.gmsgarcia.smpx.core.account.Account;
-import pt.gmsgarcia.smpx.core.commands.ISmpxCommand;
+import pt.gmsgarcia.smpx.core.commands.SmpxCommand;
 import pt.gmsgarcia.smpx.core.user.User;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Locale;
 
-public class BalanceCommand implements ISmpxCommand {
+public class BalanceCommand extends SmpxCommand {
     public static final String NAME = "balance";
     public static final String DESCRIPTION = "Get a player's balance";
     private static final String DEFAULT_PERMISSION = "smpx.economy.balance";
     private static final String ADMIN_PERMISSION = "smpx.economy.balance.*";
 
-    public BalanceCommand() {}
+    public BalanceCommand() {
+        super(NAME, DESCRIPTION);
+    }
 
     @Override
     public void execute(CommandSourceStack source, String @NotNull [] args) {
         CommandSender sender = source.getSender();
-
-        if (!sender.hasPermission(DEFAULT_PERMISSION)) {
-            sender.sendMessage(SmpxCore.messages().component("no-permission", false));
-            return;
-        }
+        if (!hasPermission(sender, DEFAULT_PERMISSION)) return;
 
         String targetName = sender.getName();
 
@@ -66,22 +64,6 @@ public class BalanceCommand implements ISmpxCommand {
     @Override
     public @NotNull Collection<String> suggest(@NotNull CommandSourceStack source, String @NotNull [] args) {
         CommandSender sender = source.getSender();
-
-        if (sender.hasPermission(ADMIN_PERMISSION)) {
-            if (args.length == 0) {
-                return Bukkit.getOnlinePlayers().stream()
-                        .map(Player::getName)
-                        .toList();
-            }
-
-            if (args.length == 1) {
-                return Bukkit.getOnlinePlayers().stream()
-                        .map(Player::getName)
-                        .filter(name -> name.toLowerCase(Locale.ROOT).startsWith(args[args.length - 1].toLowerCase(Locale.ROOT)))
-                        .toList();
-            }
-        }
-
-        return new ArrayList<>();
+        return suggestPlayerNames(sender, ADMIN_PERMISSION, args, args.length-1); // TODO: is this the correct position?
     }
 }
