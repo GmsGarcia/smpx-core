@@ -1,6 +1,6 @@
 # SMPx
 
-[![Codacy Code Quality Rate](https://app.codacy.com/project/badge/Grade/575865b644eb4f87ae4bfecfd8d65482)](https://app.codacy.com?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade) [![Discord](https://img.shields.io/discord/839440449147240489?color=5865F2&label=Discord&logo=Discord&logoColor=5865F2)](https://discord.gg/VSgTpTGZ8A) [![CurseForge](https://img.shields.io/badge/curseforge-download-orange?logo=curseforge)](https://www.curseforge.com/minecraft/mc-mods/smpx-core) [![Modrinth](https://img.shields.io/badge/modrinth-download-1BD96A?logo=modrinth)](https://modrinth.com/mod/smpx-core)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/2059ad3568c94f0888a717bb8db3cba8)](https://app.codacy.com?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade) [![Discord](https://img.shields.io/discord/839440449147240489?color=5865F2&label=Discord&logo=Discord&logoColor=5865F2)](https://discord.gg/VSgTpTGZ8A) [![CurseForge](https://img.shields.io/badge/curseforge-download-orange?logo=curseforge)](https://www.curseforge.com/minecraft/mc-mods/smpx-core) [![Modrinth](https://img.shields.io/badge/modrinth-download-1BD96A?logo=modrinth)](https://modrinth.com/mod/smpx-core)
 
 ## Overview
 **SMPx** is all-in-one [Paper](https://papermc.io/) plugin **currently in development**. It offers a variety of features, including:
