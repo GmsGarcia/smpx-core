@@ -1,6 +1,8 @@
 # To-Do:
 - Transaction Logging
 
+### Lower Codacy duplication rate
+- ^
 ### Measure SQL queries time
 - something feels wrong about it... :c (maybe not.. but ahmm.. just wanna be sure...)
 ### Create a PlayerStub:
