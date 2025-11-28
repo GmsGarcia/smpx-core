@@ -1,4 +1,4 @@
-# SMPx
+![SMPx Logo](https://gmsgarcia.github.io/smpx-wiki/img/logo_wide.svg)
 
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/2059ad3568c94f0888a717bb8db3cba8)](https://app.codacy.com/gh/GmsGarcia/smpx-core/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade) [![Discord](https://img.shields.io/discord/839440449147240489?color=5865F2&label=Discord&logo=Discord&logoColor=5865F2)](https://discord.gg/VSgTpTGZ8A) [![Modrinth](https://img.shields.io/badge/modrinth-download-1BD96A?logo=modrinth)](https://modrinth.com/mod/smpx-core)
 
