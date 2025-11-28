@@ -22,12 +22,12 @@
     - **VaultUnlocked** is required for full multi-currency support
 
 ## Permissions
-For a complete list of permissions and their descriptions, see the [Permissions page](https://gmsgarcia.github.io/smpx-wiki/docs/references/permissions).
+For a complete list of permissions and their descriptions, see the [Permissions Page](https://gmsgarcia.github.io/smpx-wiki/docs/references/permissions).
 
 > **Note:** The documentation website is still in the works.
 
 ## Commands
-For a complete list of commands and their descriptions, see the [Commands page](https://gmsgarcia.github.io/smpx-wiki/docs/references/commands).
+For a complete list of commands and their descriptions, see the [Commands Page](https://gmsgarcia.github.io/smpx-wiki/docs/references/commands).
 
 > **Note:** The documentation website is still in the works.
 
@@ -38,7 +38,7 @@ Configuration might look overwhelming at first, but most of it is documented. Yo
 - Debt limits
 - ...
 
-> **Note:** Detailed configuration guide coming soon. :>
+For a complete configuration guide, see the [Configuration Guide](https://gmsgarcia.github.io/smpx-wiki/docs/getting-started/configuration).
 
 ## Support
 If you need help or want to suggest features, join our [Discord community](https://discord.com/invite/VSgTpTGZ8A).
