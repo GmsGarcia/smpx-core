@@ -22,23 +22,14 @@
     - **VaultUnlocked** is required for full multi-currency support
 
 ## Permissions
-**Economy:**
+For a complete list of permissions and their descriptions, see the [Permissions page](https://gmsgarcia.github.io/smpx-wiki/docs/references/permissions).
 
-`smpx.economy.*`
+> **Note:** The documentation website is still in the works.
 
-**Moderation:**
+## Commands
+For a complete list of commands and their descriptions, see the [Commands page](https://gmsgarcia.github.io/smpx-wiki/docs/references/commands).
 
-`smpx.admin.*`
-
-**Tools:**
-
-`smpx.tools.*`
-
-**Dev:**
-
-`smpx.dev.*`
-
-> **Note:** Detailed permissions guide coming soon. :P
+> **Note:** The documentation website is still in the works.
 
 ## Configuration
 Configuration might look overwhelming at first, but most of it is documented. You can customize:
