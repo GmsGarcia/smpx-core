@@ -11,7 +11,7 @@ import java.sql.SQLException;
 public class DatabaseManager {
     private final HikariDataSource dataSource;
 
-    public DatabaseManager(StorageConfig.MySQLConfig cfg) {
+    public DatabaseManager(StorageConfig.DatabaseConfig cfg) {
         HikariConfig config = new HikariConfig();
 
         config.setJdbcUrl("jdbc:mysql://" + cfg.host + ":" + cfg.port + "/" + cfg.database);

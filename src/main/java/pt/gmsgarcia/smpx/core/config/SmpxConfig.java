@@ -27,7 +27,7 @@ public class SmpxConfig {
 
         try {
             config = YamlConfiguration.loadConfiguration(file);
-            SmpxCore.logger().info("Config loaded");
+            SmpxCore.logger().info("Config loaded.");
         } catch (Exception e) {
             SmpxCore.logger().severe("Failed to load config: " + e.getMessage());
         }

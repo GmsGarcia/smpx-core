@@ -2,7 +2,7 @@ package pt.gmsgarcia.smpx.core.storage.layers;
 
 import pt.gmsgarcia.smpx.core.SmpxCore;
 import pt.gmsgarcia.smpx.core.account.Account;
-import pt.gmsgarcia.smpx.core.config.StorageConfig.MySQLConfig;
+import pt.gmsgarcia.smpx.core.config.StorageConfig;
 import pt.gmsgarcia.smpx.core.storage.IStorageLayer;
 import pt.gmsgarcia.smpx.core.storage.layers.sql.DatabaseManager;
 import pt.gmsgarcia.smpx.core.storage.layers.sql.dao.AccountDAO;
@@ -21,7 +21,7 @@ public class MySQLStorage implements IStorageLayer {
 
     @Override
     public void init() {
-        MySQLConfig cfg = SmpxCore.config().storage().mysql();
+        StorageConfig.DatabaseConfig cfg = SmpxCore.config().storage().database();
         this.db = new DatabaseManager(cfg);
         this.userDao = new UserDAO(db);
         this.accountDao = new AccountDAO(db);
