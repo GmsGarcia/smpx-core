@@ -2,21 +2,22 @@ package pt.gmsgarcia.smpx.core.user;
 
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.configuration.serialization.ConfigurationSerializable;
+import org.bukkit.configuration.serialization.SerializableAs;
+import org.jetbrains.annotations.NotNull;
 import pt.gmsgarcia.smpx.core.SmpxCore;
 import pt.gmsgarcia.smpx.core.account.Account;
 import pt.gmsgarcia.smpx.core.config.CurrencyConfig;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * This class represents a player and its data. It contains all the
  * information that is stored for a player, such as their UUID,
  * name, balance, joinDate, lastSeen, and previousNames.
  */
-public class User {
+@SerializableAs("User")
+public class User implements ConfigurationSerializable {
     private final OfflinePlayer player;
     private final UUID uuid;
     private String name;
@@ -154,5 +155,43 @@ public class User {
      */
     public void setLastSeen(long timestamp) {
         this.lastSeen = timestamp;
+    }
+
+    /**
+     * Serialize User object to store in YAML file.
+     */
+    @Override
+    public @NotNull Map<String, Object> serialize() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("uuid", uuid.toString());
+        map.put("name", name);
+        map.put("join-date", joinDate);
+        map.put("last-seen", lastSeen);
+        map.put("previous-names", previousNames);
+        return map;
+    }
+
+    /**
+     * Deserialize from YAML file to User object.
+     */
+    @SuppressWarnings("unchecked")
+    public static User deserialize(Map<String, Object> map) {
+        UUID uuid = UUID.fromString((String) map.get("uuid"));
+        String name = (String) map.get("name");
+        long joinDate = ((Number) map.get("join-date")).longValue();
+        long lastSeen = ((Number) map.get("last-seen")).longValue();
+
+        ArrayList<Username> previousNames = new ArrayList<>();
+        Object raw = map.get("previous-names");
+
+        if (raw instanceof List<?>) {
+            for (Object o : (List<?>) raw) {
+                if (o instanceof Username u) previousNames.add(u);
+                else if (o instanceof Map<?,?> data)
+                    previousNames.add(Username.deserialize((Map<String, Object>) data));
+            }
+        }
+
+        return User.build(uuid, name, joinDate, lastSeen, previousNames);
     }
 }

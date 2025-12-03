@@ -1,7 +1,9 @@
 package pt.gmsgarcia.smpx.core;
 
+import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
+import pt.gmsgarcia.smpx.core.account.Account;
 import pt.gmsgarcia.smpx.core.account.AccountsCache;
 import pt.gmsgarcia.smpx.core.commands.CommandRegister;
 import pt.gmsgarcia.smpx.core.config.SmpxConfig;
@@ -11,6 +13,8 @@ import pt.gmsgarcia.smpx.core.economy.vault.VaultUnlockedEconomyProvider;
 import pt.gmsgarcia.smpx.core.listeners.SmpxListeners;
 import pt.gmsgarcia.smpx.core.providers.MessageProvider;
 import pt.gmsgarcia.smpx.core.storage.StorageManager;
+import pt.gmsgarcia.smpx.core.user.User;
+import pt.gmsgarcia.smpx.core.user.Username;
 import pt.gmsgarcia.smpx.core.user.UsersCache;
 
 public final class SmpxCore extends JavaPlugin {
@@ -27,6 +31,10 @@ public final class SmpxCore extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        ConfigurationSerialization.registerClass(User.class, "User");
+        ConfigurationSerialization.registerClass(Account.class);
+        ConfigurationSerialization.registerClass(Username.class, "Username");
+
         logger = new SmpxLogger(this.getLogger());
 
         config = new SmpxConfig();

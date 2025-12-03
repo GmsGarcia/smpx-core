@@ -32,15 +32,10 @@ economy:
     #   integer: true
 
 storage:
-  type: "mysql" # mysql (relational database) | h2 (in-memory database) - not implemented | yaml (file-based) - not implemented
-  mysql:
+  type: "yaml" # mysql (relational database) | h2 (in-memory database) - not implemented | yaml (file-based)
+  database: # only change these if you set the storage type to either 'mysql' or 'h2'
     host: "localhost"
     port: "3306"
     database: "smpx"
     user: "root"
     password: ""
-  h2:
-    todo: ""
-  yaml:
-    path: "userdata"
-    filename: "%UUID%.yml"

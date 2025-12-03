@@ -1,10 +1,14 @@
 package pt.gmsgarcia.smpx.core.account;
 
+import org.bukkit.configuration.serialization.ConfigurationSerializable;
+import org.bukkit.configuration.serialization.SerializableAs;
 import pt.gmsgarcia.smpx.core.SmpxCore;
 import pt.gmsgarcia.smpx.core.config.CurrencyConfig;
 import pt.gmsgarcia.smpx.core.config.EconomyConfig;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -12,7 +16,8 @@ import java.util.UUID;
  * information that is stored for a player or a system account,
  * such as their UUID, name, balance, joinDate, lastSeen, and previousNames.
  */
-public class Account {
+@SerializableAs("Account")
+public class Account implements ConfigurationSerializable {
     private final UUID uuid;
     private final String name;
     private final String currency;
@@ -123,5 +128,23 @@ public class Account {
         }
 
         this.balance = this.balance.subtract(amount);
+    }
+
+    @Override
+    public Map<String, Object> serialize() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("uuid", uuid.toString());
+        map.put("name", name);
+        map.put("currency", currency);
+        map.put("balance", balance.toString());
+        return map;
+    }
+
+    public static Account deserialize(Map<String, Object> map) {
+        UUID uuid = UUID.fromString((String) map.get("uuid"));
+        String name = (String) map.get("name");
+        String currency = (String) map.get("currency");
+        BigDecimal balance = new BigDecimal((String) map.get("balance"));
+        return new Account(uuid, name, currency, balance);
     }
 }
