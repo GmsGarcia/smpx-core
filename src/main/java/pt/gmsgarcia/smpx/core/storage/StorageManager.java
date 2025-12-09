@@ -1,8 +1,6 @@
 package pt.gmsgarcia.smpx.core.storage;
 
 import pt.gmsgarcia.smpx.core.SmpxCore;
-import pt.gmsgarcia.smpx.core.SmpxLogger;
-import pt.gmsgarcia.smpx.core.config.SmpxConfig;
 import pt.gmsgarcia.smpx.core.storage.layers.H2Storage;
 import pt.gmsgarcia.smpx.core.storage.layers.MySQLStorage;
 import pt.gmsgarcia.smpx.core.storage.layers.YamlFileStorage;

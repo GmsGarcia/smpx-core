@@ -8,10 +8,8 @@ import pt.gmsgarcia.smpx.core.storage.IStorageLayer;
 import pt.gmsgarcia.smpx.core.user.User;
 import pt.gmsgarcia.smpx.core.user.Username;
 
-import javax.lang.model.type.ArrayType;
 import java.io.File;
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.util.*;
 
 public class YamlFileStorage implements IStorageLayer {
